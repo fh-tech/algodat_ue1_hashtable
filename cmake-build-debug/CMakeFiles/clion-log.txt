@@ -1,0 +1,4 @@
+/opt/clion/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/vik/CloudStation/FH/ALG/hashtable
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/vik/CloudStation/FH/ALG/hashtable/cmake-build-debug

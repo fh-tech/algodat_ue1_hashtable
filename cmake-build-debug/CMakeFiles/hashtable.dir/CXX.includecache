@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/vik/CloudStation/FH/ALG/hashtable/Day.h
+iostream
+-
+
+/home/vik/CloudStation/FH/ALG/hashtable/Hashtable.h
+iostream
+-
+array
+-
+vector
+-
+Share.h
+/home/vik/CloudStation/FH/ALG/hashtable/Share.h
+
+/home/vik/CloudStation/FH/ALG/hashtable/Share.h
+cstdint
+-
+iostream
+-
+array
+-
+Day.h
+/home/vik/CloudStation/FH/ALG/hashtable/Day.h
+
+/home/vik/CloudStation/FH/ALG/hashtable/main.cpp
+iostream
+-
+array
+-
+vector
+-
+Hashtable.h
+/home/vik/CloudStation/FH/ALG/hashtable/Hashtable.h
+
