@@ -1,4 +1,4 @@
-# Install script for directory: /home/vik/Repos/ue1_hashtable
+# Install script for directory: /home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/vik/Repos/ue1_hashtable/cmake-build-debug/lib/googletest-master/cmake_install.cmake")
+  include("/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/cmake-build-debug/lib/googletest-master/cmake_install.cmake")
 
 endif()
 
@@ -46,5 +46,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/vik/Repos/ue1_hashtable/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

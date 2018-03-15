@@ -1,4 +1,4 @@
-# Install script for directory: /home/vik/Repos/ue1_hashtable/lib/googletest-master/googletest
+# Install script for directory: /home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/lib/googletest-master/googletest
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,21 +33,21 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE STATIC_LIBRARY FILES "/home/vik/Repos/ue1_hashtable/cmake-build-debug/lib/googletest-master/googlemock/gtest/libgtestd.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE STATIC_LIBRARY FILES "/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/cmake-build-debug/lib/googletest-master/googlemock/gtest/libgtestd.a")
 endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE STATIC_LIBRARY FILES "/home/vik/Repos/ue1_hashtable/cmake-build-debug/lib/googletest-master/googlemock/gtest/libgtest_maind.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64" TYPE STATIC_LIBRARY FILES "/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/cmake-build-debug/lib/googletest-master/googlemock/gtest/libgtest_maind.a")
 endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/vik/Repos/ue1_hashtable/lib/googletest-master/googletest/include/gtest")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/lib/googletest-master/googletest/include/gtest")
 endif()
 
 if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/pkgconfig" TYPE FILE FILES
-    "/home/vik/Repos/ue1_hashtable/cmake-build-debug/gtest.pc"
-    "/home/vik/Repos/ue1_hashtable/cmake-build-debug/gtest_main.pc"
+    "/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/cmake-build-debug/gtest.pc"
+    "/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/cmake-build-debug/gtest_main.pc"
     )
 endif()
 

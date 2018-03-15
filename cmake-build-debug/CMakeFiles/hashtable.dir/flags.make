@@ -6,5 +6,5 @@ CXX_FLAGS = -g   -std=gnu++1z
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /home/vik/Repos/ue1_hashtable/lib/googletest-master/googletest/include -I/home/vik/Repos/ue1_hashtable/lib/googletest-master/googlemock/include 
+CXX_INCLUDES = -isystem /home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/lib/googletest-master/googletest/include -I/home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/lib/googletest-master/googlemock/include 
 

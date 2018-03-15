@@ -1,4 +1,4 @@
-/opt/clion/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/vik/Repos/ue1_hashtable
+/opt/clion/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable
 -- The C compiler identification is GNU 7.3.0
 -- The CXX compiler identification is GNU 7.3.0
 -- Check for working C compiler: /usr/bin/cc
@@ -23,4 +23,4 @@
 -- Found Threads: TRUE  
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/vik/Repos/ue1_hashtable/cmake-build-debug
+-- Build files have been written to: /home/daniel/Nextcloud/Programming/Cpp/ue1_hashtable/cmake-build-debug
