@@ -11,15 +11,17 @@ TEST(hashtable, test1) {
     std::string wkn = "1234";
     std::string id = "MSF";
     Share *share = new Share(name,wkn,id);
-    ASSERT_EQ(share->get_name(), name);
-    ASSERT_EQ(share->get_wkn(), wkn);
 
     hashtable.insert(share);
 
-    Share * test1 = hashtable.search_byName(name);
-    Share * test2 = hashtable.search_byWKN(wkn);
+    Bucket * b_name = hashtable.search_byName(name);
+    Bucket * b_wkn = hashtable.search_byWKN(wkn);
 
-    ASSERT_EQ(share, test1);
-    ASSERT_EQ(share, test2);
-    ASSERT_EQ(test1, test2);
+    std::cout << b_name->data << std::endl;
+    std::cout << b_wkn->data << std::endl;
+    std::cout << share << std::endl;
+
+    ASSERT_EQ(share, b_name->data);
+    ASSERT_EQ(share, b_wkn->data);
+    ASSERT_EQ(b_name->data, b_wkn->data);
 }

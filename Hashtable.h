@@ -69,8 +69,8 @@ public:
         uint32_t hash_name = makeHash(share_name);
         uint32_t hash_wkn = makeHash(share_wkn);
 
-        Bucket *bucket_name = insertWithHash(hash_name, share, 0, 1, shares_name); //return value is pointer to the share
-        Bucket *bucket_wkn = insertWithHash(hash_wkn, share, 0, 1, shares_wkn);
+        Bucket *bucket_name = insertWithHash(hash_name, share, 0, shares_name); //return value is pointer to the share
+        Bucket *bucket_wkn = insertWithHash(hash_wkn, share, 0, shares_wkn);
 
         bucket_name->other = bucket_wkn;
         bucket_wkn->other = bucket_name;
@@ -92,20 +92,20 @@ public:
 
     Bucket* search_byName(std::string &key) { //no const because possible that getting changes
         uint32_t hash_name = makeHash(key);
-        Bucket* bucket = getWithHash<1>(hash_name, key, 0, 1, shares_name);
+        Bucket* bucket = getWithHash<1>(hash_name, key, 0, shares_name);
         return bucket;
     }
 
     Bucket* search_byWKN(std::string &key) {
         uint32_t hash_wkn = makeHash(key);
-        Bucket* bucket = getWithHash<0>(hash_wkn, key, 0, 1, shares_wkn);
+        Bucket* bucket = getWithHash<0>(hash_wkn, key, 0, shares_wkn);
         return bucket;
     }
 
     // remove only possible by name!! //FIXME: need cleanup here but is it possible see (my block haha)
     void removeShare(std::string &key) {
         hash_t hash_name = makeHash(key);
-        Bucket* bucket_name = getWithHash<1>(hash_name, key, 0, 1, shares_name);
+        Bucket* bucket_name = getWithHash<1>(hash_name, key, 0, shares_name);
         Bucket* bucket_wkn = bucket_name->other;
         if(bucket_name->data->get_name() == key && bucket_wkn->data->get_wkn() == bucket_name->data->get_wkn()) {       //FIXME: keep sanity check?
             Share * data = bucket_name->data;
@@ -128,16 +128,16 @@ private:
     std::vector<Bucket> shares_wkn; //side store which stores a pointer to the pointer to the share
 
 
-    Bucket* insertWithHash(hash_t hash, Share *share, uint8_t i, uint8_t tries, std::vector<Bucket> &table) {
+    Bucket* insertWithHash(hash_t hash, Share *share, uint8_t i, std::vector<Bucket> &table) {
         uint16_t pos = (hash + (i * i)) % table_size;
         if (table[pos].data == nullptr) {
             table[pos].data = share;
             return &table[pos];
         } else {
-            if (tries == table_size + 1) {
+            if (i == table_size + 1) {
                 exit(1); //TODO think about abort condition
             } else {
-                insertWithHash(hash, share, i + 1, tries + 1, table);
+                insertWithHash(hash, share, i + 1, table);
             }
         }
     }
@@ -145,21 +145,20 @@ private:
     // with i = 1 you search with name
     // with i = 0 you search with wkn
     template<int j>
-    Bucket* getWithHash(hash_t hash, std::string key, uint8_t i, uint16_t tries, std::vector<Bucket> &table) {
-        Bucket bucket = table[(hash + (i * i)) % table_size];
-        if (bucket.data != nullptr) {
+    Bucket* getWithHash(hash_t hash, std::string key, uint8_t i, std::vector<Bucket> &table) {
+        Bucket *bucket = &table[(hash + (i * i)) % table_size];
+        if (bucket->data != nullptr) {
             auto flag = false;
             if constexpr (j == 1) {
-                flag = key == bucket.data->get_name();
+                flag = key == bucket->data->get_name();
             } else {
-                flag = key == bucket.data->get_wkn();
+                flag = key == bucket->data->get_wkn();
             }
 
             if (flag) { // flag is true so we found the share we wanted
-                Bucket *buck = &bucket;
-                return buck;           // FIXME: why doesnt return &bucket work ?
+                return bucket;
             } else {  // if its the wrong share --> share with same hash keep searching
-                getWithHash<j>(hash, key, i + 1, tries + 1, table);
+                getWithHash<j>(hash, key, i + 1, table);
             }
         } else {
             // first empty field --> not in table

@@ -6,5 +6,5 @@ CXX_FLAGS = -g    -Wall -Wshadow -Werror -Wno-error=dangling-else -DGTEST_HAS_PT
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /home/vik/CloudStation/FH/ALG/hashtable/lib/googletest-master/googlemock/include -I/home/vik/CloudStation/FH/ALG/hashtable/lib/googletest-master/googlemock -isystem /home/vik/CloudStation/FH/ALG/hashtable/lib/googletest-master/googletest/include -I/home/vik/CloudStation/FH/ALG/hashtable/lib/googletest-master/googletest 
+CXX_INCLUDES = -isystem /home/vik/Repos/ue1_hashtable/lib/googletest-master/googlemock/include -I/home/vik/Repos/ue1_hashtable/lib/googletest-master/googlemock -isystem /home/vik/Repos/ue1_hashtable/lib/googletest-master/googletest/include -I/home/vik/Repos/ue1_hashtable/lib/googletest-master/googletest 
 

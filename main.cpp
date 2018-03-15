@@ -22,13 +22,10 @@ int main() {
     Bucket * b_name = hashtable.search_byName(name);
     Bucket * b_wkn = hashtable.search_byWKN(wkn);
 
-    std::cout << b_name->data << std::endl;     //FIXME: wtf i return a pointer to bucket but its contents are fucked
-    std::cout << b_wkn->data << std::endl;      //FIXME: wtf i return a pointer to bucket but its contents are fucked
+    std::cout << b_name->data << std::endl;
+    std::cout << b_wkn->data << std::endl;
     std::cout << share << std::endl;
 
-    hashtable.printAll<0>();
-    hashtable.removeShare(name);
-    hashtable.printAll<0>();
 
     return 0;
 }
