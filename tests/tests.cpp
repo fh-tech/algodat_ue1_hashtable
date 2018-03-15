@@ -3,25 +3,45 @@
 //
 
 #include <gtest/gtest.h>
-#include "../Hashtable.h"
+#include "../hashmap.h"
 
 TEST(hashtable, test1) {
-    Hashtable hashtable = Hashtable(1000);
+    HashTable hashtable = HashTable(1000);
     std::string name = "Microsoft";
     std::string wkn = "1234";
     std::string id = "MSF";
-    Share *share = new Share(name,wkn,id);
+    Share share = Share{"Microsoft", "1234", "MSF"};
 
-    hashtable.insert(share);
+    hashtable.insert(std::move(share));
 
-    Bucket * b_name = hashtable.search_byName(name);
-    Bucket * b_wkn = hashtable.search_byWKN(wkn);
+    Share * s_name = hashtable.get_by_name(name);
+    Share * s_wkn = hashtable.get_by_wkn(wkn);
 
-    std::cout << b_name->data << std::endl;
-    std::cout << b_wkn->data << std::endl;
-    std::cout << share << std::endl;
+    std::cout << s_name << std::endl;
+    std::cout << s_wkn << std::endl;
 
-    ASSERT_EQ(share, b_name->data);
-    ASSERT_EQ(share, b_wkn->data);
-    ASSERT_EQ(b_name->data, b_wkn->data);
+    Share s = Share{"Microsoft", "1234", "MSF"};
+
+    if(s == *s_wkn){
+
+    }
+
+    ASSERT_EQ(s, *s_wkn);
+    ASSERT_EQ(s, *s_wkn);
+    ASSERT_EQ(s_name, s_wkn);
+}
+
+TEST(hastable, test2){
+
+    HashTable hashtable = HashTable(4);
+
+    Share s0 = {"a", "A", "a"};
+    Share s1 = {"b", "B", "b"};
+    Share s2 = {"c", "C", "c"};
+    Share s3 = {"v", "v", "v"};
+
+    ASSERT_TRUE(hashtable.insert(std::move(s0)));
+    ASSERT_TRUE(hashtable.insert(std::move(s1)));
+    ASSERT_TRUE(hashtable.insert(std::move(s2)));
+
 }

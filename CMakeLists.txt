@@ -7,7 +7,7 @@ add_subdirectory(lib/googletest-master)
 include_directories(lib/googletest-master/googletest/include)
 include_directories(lib/googletest-master/googlemock/include)
 
-add_executable(hashtable main.cpp Share.h Hashtable.h Day.h)
+add_executable(hashtable main.cpp Share.h Day.h hashmap.h hashmap_impl.h hashmap_iter.h)
 add_executable(runTests tests/test.cpp tests/tests.cpp)
 
 target_link_libraries(hashtable gtest gtest_main)

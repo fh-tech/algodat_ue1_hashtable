@@ -1,31 +1,23 @@
-#include <iostream>
-#include <array>
-#include <vector>
-#include "Hashtable.h"
+#include "hashmap.h"
 
+std::string import() {}
 
-std::string import() {
-
-}
-
-
-int main() {
-    Hashtable hashtable = Hashtable(1000);
+int main()
+{
+    HashTable hashtable(1000);
     std::string name = "Microsoft";
     std::string wkn = "1234";
-    std::string id = "MSF";
-    Share *share = new Share(name,wkn,id);
+    std::string id = "MSFT";
 
+    auto share = Share{ "Microsoft", "1234", "MSFT" };
 
-    hashtable.insert(share);
+    hashtable.insert(std::move(share));
 
-    Bucket * b_name = hashtable.search_byName(name);
-    Bucket * b_wkn = hashtable.search_byWKN(wkn);
+    Share* s_name = hashtable.get_by_name(name);
+    Share* s_wkn = hashtable.get_by_wkn(wkn);
 
-    std::cout << b_name->data << std::endl;
-    std::cout << b_wkn->data << std::endl;
-    std::cout << share << std::endl;
-
+    std::cout << s_name << std::endl;
+    std::cout << s_wkn << std::endl;
 
     return 0;
 }
