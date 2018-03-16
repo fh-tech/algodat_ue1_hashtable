@@ -16,6 +16,7 @@ class Day {
     float adj_close;
     uint32_t volume;
 public:
+    //TODO: should i pass those as references to save 1 copy sequence?
     Day(uint32_t date, float open, float high, float low, float close, float adj_close, uint32_t volume)
     :date(date),
     open(open),
@@ -23,8 +24,9 @@ public:
     low(low),
     close(close),
     adj_close(adj_close),
-    volume(volume)
+     volume(volume)
     {}
+    Day() = default;
 };
 
 

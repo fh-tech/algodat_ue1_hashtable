@@ -16,13 +16,15 @@ private:
     std::string name;
     std::string wkn; //wertpapierkennnummer
     std::string id; //kürzel zum beispiel MSFT für microsoft aktie
-    std::array<Day, 30> *days; //FIXME soll pointer sein wegen cash line vorteil (cash locality)  weil in der regel 64 byte gelesen auf einmal und dann hab ich mehr shares vllt schon gelesen, wenn ich days direkt drin hab les ich days mit
+    std::array<Day, 30> days;
 public:
-    Share(std::string& name, std::string& wkn, std::string& id)
+    Share(std::string& name, std::string& wkn, std::string& id, std::array<Day, 30>& days)
             :name(name),
              wkn(wkn),
-             id(id)
+             id(id),
+             days(days)
     {}
+    Share() = default;
 
     //Getter Setter
     std::string get_name() const {

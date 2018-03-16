@@ -3,6 +3,7 @@
 //
 
 #include <gtest/gtest.h>
+#include <fstream>
 #include "../Hashtable.h"
 
 TEST(hashtable, test1) {
@@ -24,4 +25,11 @@ TEST(hashtable, test1) {
     ASSERT_EQ(share, b_name->data);
     ASSERT_EQ(share, b_wkn->data);
     ASSERT_EQ(b_name->data, b_wkn->data);
+}
+
+
+TEST(import, test1) {
+
+
+
 }
