@@ -53,7 +53,7 @@ public:
     {
     }
 
-    inline iterator begin()
+    inline iterator begin()       //REVIEW the whole inline stuff is weird -- read in stackoverflow should leave to compiler in this context
     {
         return internal_iter_impl<Bucket, std::vector<Bucket>>(m_hash, m_data, 0);
     }

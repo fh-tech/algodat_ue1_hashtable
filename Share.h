@@ -16,7 +16,7 @@ struct Share {
     std::string wkn{}; // wertpapierkennnummer
     std::string id{}; // kürzel zum beispiel MSFT für microsoft aktie
     std::array<Day, 30> days{};
-    // FIXME soll pointer sein wegen cash line vorteil
+    // FIXME soll pointer sein wegen cash line vorteil - wegen quadratic probing aber unnötig geworden außer bei erster probing iteration
     // (cash locality)  weil in der regel 64 byte
     // gelesen auf einmal und dann hab ich mehr shares
     // vllt schon gelesen, wenn ich days direkt drin hab
@@ -31,7 +31,7 @@ struct Share {
     {
     }
 
-    Share(Share&& other) noexcept
+    Share(Share&& other) noexcept          //means can not throw
         : wkn(std::move(other.wkn))
         , name(std::move(other.name))
         , id(std::move(other.id))
