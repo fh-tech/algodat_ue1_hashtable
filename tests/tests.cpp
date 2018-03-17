@@ -7,28 +7,30 @@
 
 TEST(hashtable, test1) {
     HashTable hashtable = HashTable(1000);
-    std::string name = "Microsoft";
-    std::string code = "1234";
-    std::string id = "MSF";
-    Share share = Share{"Microsoft", "1234", "MSF"};
+
+    Share share = Share{"Microsoft", "MSFT", "1234"};
 
     hashtable.insert(std::move(share));
 
+    std::string name = "Microsoft";
     Share * s_name = hashtable.get_by_name(name);
-    Share * s_code = hashtable.get_by_code(code);
+
+    std::string id = "MSFT";
+    Share * s_id = hashtable.get_by_id(id);
+
+
 
     std::cout << s_name << std::endl;
-    std::cout << s_code << std::endl;
+    std::cout << s_id << std::endl;
 
-    Share s = Share{"Microsoft", "1234", "MSF"};
 
-    if(s == *s_code){
 
-    }
+    Share s = Share{"Microsoft", "MSFT", "1234"};
 
-    ASSERT_EQ(s, *s_code);
-    ASSERT_EQ(s, *s_code);
-    ASSERT_EQ(s_name, s_code);
+
+    ASSERT_EQ(s, *s_id);
+    ASSERT_EQ(s, *s_id);
+    ASSERT_EQ(s_name, s_id);
 }
 
 TEST(hashtable, test2){

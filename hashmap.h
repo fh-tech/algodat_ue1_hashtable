@@ -22,14 +22,14 @@ struct QuadraticProbingIterator; //REVIEW why ?
 struct HashTable {        //REVIEW god damnit write class xD
 public:
     enum KeyType {
-        CODE,
+        ID,
         NAME
     };
 
 private:
     std::vector<Bucket> m_nameTable;
 
-    std::vector<Bucket> m_codeTable;     //REVIEW sollte jetzt vermutlich m_idTable sein
+    std::vector<Bucket> m_idTable;     //REVIEW sollte jetzt vermutlich m_idTable sein
 
     Bucket m_invalid;
 
@@ -72,7 +72,7 @@ private:
 public:
     explicit HashTable(size_t size)   //REVIEW explicit to avoid conversions of size ?     and why pass size_t and not uint
         : m_nameTable(size)
-        , m_codeTable(size)
+        , m_idTable(size)
     {
     }
 
@@ -98,9 +98,9 @@ public:
             return nullptr;
     }
 
-    Share* get_by_code(std::string& str)
+    Share* get_by_id(std::string& str)
     {
-        auto tmp = get_for_key<CODE>(str);
+        auto tmp = get_for_key<ID>(str);
         if (tmp)
             return tmp->data;
         else
@@ -112,9 +112,9 @@ public:
         return std::move(remove<NAME>(str));
     }
 
-    std::unique_ptr<Share> remove_by_code(std::string& str)
+    std::unique_ptr<Share> remove_by_id(std::string& str)
     {
-        return std::move(remove<CODE>(str));
+        return std::move(remove<ID>(str));
     }
 };
 

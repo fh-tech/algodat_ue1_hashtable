@@ -10,8 +10,8 @@
 template <HashTable::KeyType keyType>
 inline std::string& HashTable::getKey(Share& share) const
 {
-    if constexpr (keyType == HashTable::CODE) {
-        return share.code;
+    if constexpr (keyType == HashTable::ID) {
+        return share.id;
     } else {
         return share.name;
     }
@@ -20,8 +20,8 @@ inline std::string& HashTable::getKey(Share& share) const
 template <HashTable::KeyType keyType>
 inline std::vector<Bucket>& HashTable::getTable()
 {
-    if constexpr (keyType == CODE) {
-        return m_codeTable;
+    if constexpr (keyType == ID) {
+        return m_idTable;
     } else {
         return m_nameTable;
     }
@@ -47,7 +47,7 @@ Bucket* HashTable::insert_side(Share* s)
 
 void HashTable::print()
 {
-    for (auto& b : m_codeTable) {
+    for (auto& b : m_idTable) {
         std::cout << std::setw(14) << b.data << "  : " << (b.data ? b.data->name : "") << '\n';
     }
     std::cout << std::endl;
@@ -57,10 +57,10 @@ Share* HashTable::insert(Share&& share)   //REVIEW what exactly is Share&&
 {
     auto sh_ptr = new Share(std::move(share));   //REVIEW is that a unique_ptr now?   why move and why make new Share at all
 
-    if (auto code_ptr = insert_side<CODE>(sh_ptr)) {     // is pointer to bucket or nullptr
+    if (auto id_ptr = insert_side<ID>(sh_ptr)) {     // is pointer to bucket or nullptr
         auto name_ptr = insert_side<NAME>(sh_ptr);     // another Bucket *
-        code_ptr->other = name_ptr;                     // REVIEW what if first insert is successful but second into the other vector not (wont happen probably)
-        name_ptr->other = code_ptr;                      // now point at each other
+        id_ptr->other = name_ptr;                     // REVIEW what if first insert is successful but second into the other vector not (wont happen probably)
+        name_ptr->other = id_ptr;                      // now point at each other
 
         return sh_ptr;
     }

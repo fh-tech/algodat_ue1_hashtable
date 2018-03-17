@@ -24,7 +24,7 @@ struct Share {
 
     Share() = default;
 
-    Share(std::string&& name, std::string&& wkn, std::string&& id)
+    Share(std::string&& name, std::string&& id, std::string&& wkn)
         : name(std::move(name))
         , wkn(std::move(wkn))
         , id(std::move(id))
@@ -32,9 +32,9 @@ struct Share {
     }
 
     Share(Share&& other) noexcept          //means can not throw
-        : wkn(std::move(other.wkn))
+        : id(std::move(other.id))
         , name(std::move(other.name))
-        , id(std::move(other.id))
+        , wkn(std::move(other.wkn))
         , days(other.days)
     {
     }
