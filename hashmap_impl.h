@@ -53,31 +53,31 @@ void HashTable::print()
     std::cout << std::endl;
 }
 
-Share* HashTable::insert(Share&& share)
+Share* HashTable::insert(Share&& share)   //REVIEW what exactly is Share&&
 {
-    auto sh_ptr = new Share(std::move(share));
+    auto sh_ptr = new Share(std::move(share));   //REVIEW is that a unique_ptr now?   why move and why make new Share at all
 
-    if (auto wkn_ptr = insert_side<WKN>(sh_ptr)) {
-        auto name_ptr = insert_side<NAME>(sh_ptr);
-        wkn_ptr->other = name_ptr;
-        name_ptr->other = wkn_ptr;
+    if (auto wkn_ptr = insert_side<WKN>(sh_ptr)) {     // is pointer to bucket or nullptr
+        auto name_ptr = insert_side<NAME>(sh_ptr);     // another Bucket *
+        wkn_ptr->other = name_ptr;                     // REVIEW what if first insert is successful but second into the other vector not (wont happen probably)
+        name_ptr->other = wkn_ptr;                      // now point at each other
 
         return sh_ptr;
     }
     return nullptr;
 }
 
-template <HashTable::KeyType keyType>
+template <HashTable::KeyType keyType>          //REVIEW why not only KeyType keytype --> we are in class should work
 Bucket* HashTable::get_for_key(std::string& key)
 {
 
     Bucket* toSwitch = nullptr;
 
     for (auto& bucket : iter<keyType>(key)) {
-        if (bucket.other == nullptr)
+        if (bucket.other == nullptr)      //REVIEW doesnt matter if you check other or data
             return nullptr;
 
-        if (bucket.other == &m_invalid)
+        if (bucket.other == &m_invalid)     //REVIEW again it should not matter if we use other or data? because when setting invalid we remove link to other table?
             toSwitch = &bucket;
 
         if (getKey<keyType>(*bucket.data) == key) {
