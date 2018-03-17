@@ -10,8 +10,8 @@
 template <HashTable::KeyType keyType>
 inline std::string& HashTable::getKey(Share& share) const
 {
-    if constexpr (keyType == HashTable::WKN) {
-        return share.wkn;
+    if constexpr (keyType == HashTable::CODE) {
+        return share.code;
     } else {
         return share.name;
     }
@@ -20,8 +20,8 @@ inline std::string& HashTable::getKey(Share& share) const
 template <HashTable::KeyType keyType>
 inline std::vector<Bucket>& HashTable::getTable()
 {
-    if constexpr (keyType == WKN) {
-        return m_wknTable;
+    if constexpr (keyType == CODE) {
+        return m_codeTable;
     } else {
         return m_nameTable;
     }
@@ -47,7 +47,7 @@ Bucket* HashTable::insert_side(Share* s)
 
 void HashTable::print()
 {
-    for (auto& b : m_wknTable) {
+    for (auto& b : m_codeTable) {
         std::cout << std::setw(14) << b.data << "  : " << (b.data ? b.data->name : "") << '\n';
     }
     std::cout << std::endl;
@@ -57,10 +57,10 @@ Share* HashTable::insert(Share&& share)
 {
     auto sh_ptr = new Share(std::move(share));
 
-    if (auto wkn_ptr = insert_side<WKN>(sh_ptr)) {
+    if (auto code_ptr = insert_side<CODE>(sh_ptr)) {
         auto name_ptr = insert_side<NAME>(sh_ptr);
-        wkn_ptr->other = name_ptr;
-        name_ptr->other = wkn_ptr;
+        code_ptr->other = name_ptr;
+        name_ptr->other = code_ptr;
 
         return sh_ptr;
     }

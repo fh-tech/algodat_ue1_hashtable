@@ -8,30 +8,30 @@
 TEST(hashtable, test1) {
     HashTable hashtable = HashTable(1000);
     std::string name = "Microsoft";
-    std::string wkn = "1234";
+    std::string code = "1234";
     std::string id = "MSF";
     Share share = Share{"Microsoft", "1234", "MSF"};
 
     hashtable.insert(std::move(share));
 
     Share * s_name = hashtable.get_by_name(name);
-    Share * s_wkn = hashtable.get_by_wkn(wkn);
+    Share * s_code = hashtable.get_by_code(code);
 
     std::cout << s_name << std::endl;
-    std::cout << s_wkn << std::endl;
+    std::cout << s_code << std::endl;
 
     Share s = Share{"Microsoft", "1234", "MSF"};
 
-    if(s == *s_wkn){
+    if(s == *s_code){
 
     }
 
-    ASSERT_EQ(s, *s_wkn);
-    ASSERT_EQ(s, *s_wkn);
-    ASSERT_EQ(s_name, s_wkn);
+    ASSERT_EQ(s, *s_code);
+    ASSERT_EQ(s, *s_code);
+    ASSERT_EQ(s_name, s_code);
 }
 
-TEST(hastable, test2){
+TEST(hashtable, test2){
 
     HashTable hashtable = HashTable(4);
 
@@ -45,3 +45,5 @@ TEST(hastable, test2){
     ASSERT_TRUE(hashtable.insert(std::move(s2)));
 
 }
+
+

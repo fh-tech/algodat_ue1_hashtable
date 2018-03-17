@@ -22,14 +22,14 @@ struct QuadraticProbingIterator;
 struct HashTable {
 public:
     enum KeyType {
-        WKN,
+        CODE,
         NAME
     };
 
 private:
     std::vector<Bucket> m_nameTable;
 
-    std::vector<Bucket> m_wknTable;
+    std::vector<Bucket> m_codeTable;
 
     Bucket m_invalid;
 
@@ -72,7 +72,7 @@ private:
 public:
     explicit HashTable(size_t size)
         : m_nameTable(size)
-        , m_wknTable(size)
+        , m_codeTable(size)
     {
     }
 
@@ -98,9 +98,9 @@ public:
             return nullptr;
     }
 
-    Share* get_by_wkn(std::string& str)
+    Share* get_by_code(std::string& str)
     {
-        auto tmp = get_for_key<WKN>(str);
+        auto tmp = get_for_key<CODE>(str);
         if (tmp)
             return tmp->data;
         else
@@ -112,9 +112,9 @@ public:
         return std::move(remove<NAME>(str));
     }
 
-    std::unique_ptr<Share> remove_by_wkn(std::string& str)
+    std::unique_ptr<Share> remove_by_code(std::string& str)
     {
-        return std::move(remove<WKN>(str));
+        return std::move(remove<CODE>(str));
     }
 };
 
