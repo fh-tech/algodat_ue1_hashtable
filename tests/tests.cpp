@@ -4,6 +4,9 @@
 
 #include <gtest/gtest.h>
 #include "../hashmap.h"
+#include "utils.h"
+#include <nlohmann/json.hpp>
+
 
 TEST(hashtable, test1) {
     HashTable hashtable = HashTable(1000);
@@ -48,4 +51,42 @@ TEST(hashtable, test2){
 
 }
 
+TEST(json, day_serialier){
+
+    Day d = random_day();
+    json j = d;
+    std::cout  << j << std::endl;
+
+    Day d2 = j;
+
+    ASSERT_EQ(d, d2);
+}
+
+TEST(json, share_serialier){
+
+    Share s = random_share();
+    json j = s;
+    std::cout  << j << std::endl;
+
+    Share s2 = j;
+
+    ASSERT_EQ(s, s2);
+}
+
+TEST(json, hashtable_serialier){
+
+    auto shares = random_shares(10);
+    HashTable ht(15);
+
+    for(auto&& s: shares)
+        ht.insert(std::move(s));
+
+    json j = ht;
+
+    std::cout << j;
+
+    HashTable ht2 = j;
+
+    ASSERT_EQ(ht, ht2);
+}
 

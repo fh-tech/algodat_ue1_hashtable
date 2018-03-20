@@ -130,4 +130,26 @@ std::unique_ptr<Share> HashTable::remove(std::string &key)
     }
 }
 
+bool HashTable::operator==(const HashTable &other) const {
+
+    std::vector<Share*> thisbucketref{};
+    std::vector<Share*> otherbucketref{};
+
+    for(auto b: other.m_idTable){
+        if(b.other != nullptr && b.other != &other.m_invalid){
+            otherbucketref.push_back(b.data);
+        }
+    }
+
+    for(auto b: m_idTable){
+        if(b.other != nullptr && b.other != &m_invalid){
+            thisbucketref.push_back(b.data);
+        }
+    }
+
+    return std::is_permutation(thisbucketref.begin(), thisbucketref.end(),
+                               otherbucketref.begin(), otherbucketref.end(),
+                                [](auto s1, auto s2){ return *s1 == *s2;});
+}
+
 #endif //DEFINITIVEHASH_HASHMAP_IMPL_H

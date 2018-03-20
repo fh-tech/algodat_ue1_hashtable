@@ -24,12 +24,13 @@ public:
         NAME
     };
 
-private:
     std::vector<Bucket> m_nameTable{};
 
     std::vector<Bucket> m_idTable{};
 
-    Bucket m_invalid;
+    Bucket m_invalid{};
+
+private:
 
     template <KeyType keyType>
     inline std::string& getKey(Share& share) const;
@@ -46,6 +47,9 @@ private:
     std::unique_ptr<Share> remove(std::string& key);
 
 public:
+
+    HashTable() = default;
+
     explicit HashTable(size_t size)
         : m_nameTable(size)
         , m_idTable(size)
@@ -83,6 +87,8 @@ public:
             return nullptr;
     }
 
+    bool operator==(const HashTable& other) const;
+
     std::unique_ptr<Share> remove_by_name(std::string& str)
     {
         return remove<NAME>(str);
@@ -92,8 +98,31 @@ public:
     {
         return remove<ID>(str);
     }
+
 };
 
+
 #include "hashmap_impl.h"
+
+void from_json(const json& j, HashTable& ht){
+    ht.m_idTable.resize(j["capacity"]);
+    ht.m_nameTable.resize(j["capacity"]);
+    for(auto ele: j["elements"]){
+        ht.insert(ele);
+    }
+}
+
+static void to_json(json& j, const HashTable& ht){
+    j["capacity"] = ht.m_idTable.size();
+    std::vector<Share> shs{};
+    for(auto& b: ht.m_idTable){
+        if(b.other != nullptr || b.other != &ht.m_invalid){
+            if(b.data)
+                shs.push_back(*b.data);
+
+        }
+    }
+    j["elements"] = shs;
+}
 
 #endif //DEFINITIVEHASH_HASHMAP_H

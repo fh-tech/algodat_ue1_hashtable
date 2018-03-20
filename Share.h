@@ -16,13 +16,10 @@ struct Share {
     std::string wkn{}; // wertpapierkennnummer
     std::string id{}; // kürzel zum beispiel MSFT für microsoft aktie
     std::array<Day, 30> days{};
-    // FIXME soll pointer sein wegen cash line vorteil - wegen quadratic probing aber unnötig geworden außer bei erster probing iteration
-    // (cash locality)  weil in der regel 64 byte
-    // gelesen auf einmal und dann hab ich mehr shares
-    // vllt schon gelesen, wenn ich days direkt drin hab
-    // les ich days mit
+
 
     Share() = default;
+    Share(const Share& other) = default;
 
     Share(std::string&& name, std::string&& id, std::string&& wkn)
         : name(std::move(name))
@@ -31,7 +28,7 @@ struct Share {
     {
     }
 
-    Share(Share&& other) noexcept          //means can not throw
+    Share(Share&& other) noexcept
         : id(std::move(other.id))
         , name(std::move(other.name))
         , wkn(std::move(other.wkn))
@@ -47,5 +44,19 @@ struct Share {
             && days == other.days;
     }
 };
+
+void to_json(json& j, const Share& s){
+    j["name"] = s.name;
+    j["wkn"] = s.wkn;
+    j["id"] = s.id;
+    j["days"] = s.days;
+}
+
+void from_json(const json& j, Share& s){
+    s.name = j.at("name").get<std::string>();
+    s.id = j.at("id").get<std::string>();
+    s.wkn = j.at("wkn").get<std::string>();
+    s.days = j.at("days").get<std::array<Day, 30>>();
+}
 
 #endif // HASHTABLE_SHARE_H
