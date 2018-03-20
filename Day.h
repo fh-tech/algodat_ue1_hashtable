@@ -8,15 +8,18 @@
 #include <iostream>
 
 class Day {
-    uint32_t date; // unix timestamp ?   oder doch lieber als string?
+    uint32_t date;
+
+    uint32_t volume;
+
+public:
+
     float open;
     float high;
     float low;
     float close;
     float adj_close;
-    uint32_t volume;
 
-public:
     Day() = default;
 
     Day(uint32_t date, float open, float high, float low, float close,

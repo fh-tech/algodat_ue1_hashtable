@@ -1,6 +1,40 @@
+#include <algorithm>
+#include <cstring>
 #include "hashmap.h"
 
 std::string import() {}
+
+
+void plot(){
+    std::array<std::array<char, 30>, 20> plot{};
+    std::memset(plot.begin(), ' ', plot.size() * plot[0].size());
+
+    Share s = {"Microsoft", "MSFT", "1245678"};
+
+    int i = 0;
+    for(auto& day: s.days) {
+        day.close = i++ * i;
+    }
+
+    auto [daymin, daymax] = std::minmax_element(std::begin(s.days), std::end(s.days),
+                                 [](Day& d0, Day& d1){ return d0.close < d1.close; });
+
+    std::cout << "min: "<< daymin->close << '\n';
+    std::cout << "max: "<< daymax->close << '\n';
+
+    float delta = daymax->close - daymin->close;
+    float delta_row = delta / plot.size();
+
+    for(int i = 0; i < s.days.size(); ++i){
+        Day& d = s.days[i];
+        plot[static_cast<size_t >(19.0 - (d.close / delta_row))][i] = '#';
+    }
+    std::cout << s.name << "   :    " << s.id << " (" << s.wkn << ")\n";
+    for(auto& row: plot){
+        std::cout << std::string(row.cbegin(), row.cend()) << std::endl;
+    }
+}
+
 
 static std::array<std::string, 8> CommandStr =
         {"add", "delete", "import", "plot", "save", "load", "quit", "search"};
@@ -30,7 +64,7 @@ void parse_input(const std::string& input) {
                 case IMPORT:
                     import();
                     return;
-                case PLOT:  //plot();
+                case PLOT:  plot();
                     return;
                 case SAVE:  //save();
                     return;
@@ -54,16 +88,16 @@ void parse_input(const std::string& input) {
 
 int main() {
     std::cout <<
-              "============= Available Actions ================="
-                      "\n"
-                      "ADD: Manually input new Stock\n"
-                      "DEL: Remove a stock by ID or name\n"
-                      "IMPORT: Import stock information form a .csv file\n"
-                      "SEARCH: Search information for a specific stock either by name or ID\n"
-                      "PLOT: Visualize stock data\n"
-                      "SAVE: Save current program data to json file\n"
-                      "LOAD: Load data from a json file\n"
-                      "QUIT: Exits the program. Make sure to save before." << std::endl;
+  "============= Available Actions ================="
+          "\n"
+          "ADD: Manually input new Stock\n"
+          "DEL: Remove a stock by ID or name\n"
+          "IMPORT: Import stock information form a .csv file\n"
+          "SEARCH: Search information for a specific stock either by name or ID\n"
+          "PLOT: Visualize stock data\n"
+          "SAVE: Save current program data to json file\n"
+          "LOAD: Load data from a json file\n"
+          "QUIT: Exits the program. Make sure to save before." << std::endl;
     while(true) {
         std::cout << " > " << std::flush;
 
