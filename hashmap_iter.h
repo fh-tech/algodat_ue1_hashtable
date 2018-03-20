@@ -9,8 +9,8 @@
 
 template <typename T, typename C>
 class internal_iter_impl {
-    size_t m_i;
-    hash_t m_hash;
+    size_t m_i{};
+    hash_t m_hash{};
     C& m_data;
 
 public:
@@ -43,7 +43,7 @@ using const_iterator = internal_iter_impl<Bucket, std::vector<Bucket> const>;
 
 class hashiter {
 
-    hash_t m_hash;
+    hash_t m_hash{};
     std::vector<Bucket>& m_data;
 
 public:
@@ -53,7 +53,7 @@ public:
     {
     }
 
-    inline iterator begin()       //REVIEW the whole inline stuff is weird -- read in stackoverflow should leave to compiler in this context
+    inline iterator begin()
     {
         return internal_iter_impl<Bucket, std::vector<Bucket>>(m_hash, m_data, 0);
     }
