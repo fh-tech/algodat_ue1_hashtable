@@ -5,7 +5,7 @@
 
 std::string import() {}
 
-static HashTable hashTable(2048);
+static HashTable hashTable{1'000};
 
 void plot() {
     std::array<std::array<char, 30>, 20> plot{};
@@ -13,9 +13,9 @@ void plot() {
 
     Share s = {"Microsoft", "MSFT", "1245678"};
 
-    int i = 0;
+    int j = 0;
     for (auto &day: s.days) {
-        day.close = i++ * i;
+        day.close = j++ * j;
     }
 
     auto[daymin, daymax] = std::minmax_element(std::begin(s.days), std::end(s.days),

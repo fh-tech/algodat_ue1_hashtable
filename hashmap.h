@@ -39,7 +39,7 @@ private:
     constexpr std::vector<Bucket>& getTable();
 
     template <KeyType keyType>
-    Bucket* insert_side(Share* s);
+    Bucket* insert_side(std::string& s);
 
     inline hash_t make_hash(std::string& str) const;
 
@@ -54,6 +54,15 @@ public:
         : m_nameTable(size)
         , m_idTable(size)
     {
+    }
+
+    ~HashTable(){
+        for(auto& b: m_idTable){
+            if(b.data)
+            {
+                delete b.data;
+            }
+        }
     }
 
     template <KeyType keyType>

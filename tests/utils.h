@@ -44,9 +44,9 @@ Day random_day(){
 
 Share random_share() {
     Share s {
-            std::move(random_str(5)),
-            std::move(random_str(5)),
-            std::move(random_str(5)),
+            std::move(random_str(20)),
+            std::move(random_str(20)),
+            std::move(random_str(20)),
 
     };
 

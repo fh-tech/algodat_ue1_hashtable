@@ -28,13 +28,7 @@ struct Share {
     {
     }
 
-    Share(Share&& other) noexcept
-        : id(std::move(other.id))
-        , name(std::move(other.name))
-        , wkn(std::move(other.wkn))
-        , days(other.days)
-    {
-    }
+    Share(Share&& other) = default;
 
     bool operator==(const Share& other) const
     {
