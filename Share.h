@@ -34,6 +34,13 @@ struct Share {
 
     }
 
+    Share(std::string &name, std::string &id, std::string &wkn)
+            : name(name),
+              id(id),
+              wkn(wkn) {
+
+    }
+
     Share(Share &&other) = default;
 
     bool operator==(const Share &other) const {

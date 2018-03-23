@@ -79,54 +79,135 @@ std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
     return days;
 }
 
-// returns new Share on success nullptr on failure
-Share import() {
+bool validInput(const std::string &id, const std::string &wkn, const std::string &name, bool verbose) {
+    bool valid = !name.empty() && !id.empty() && !wkn.empty();
+    if (!valid) std::cout << "No empty values allowed" << std::endl;
+    return valid;
+}
+
+Share *add() {
     Share share{};
     std::string name;
     std::string wkn;
     std::string id; //kürzel
     std::string contin;
+    Share* share_p;
+    do {
+        std::cout << "Please enter the name of the share: ";
+        std::cin >> name;
 
-    std::cout << "Please enter the name of the share: ";
-    std::cin >> name;
+        std::cout << "Please enter the WKN(Wertpapierkennnummer): ";
+        std::cin >> wkn;
 
-    std::cout << "Please enter the WKN(Wertpapierkennnummer): ";
-    std::cin >> wkn;
-
-    std::cout << "Please enter the ID(Kürzel): ";
-    std::cin >> id;
-
+        std::cout << "Please enter the ID(Kürzel): ";
+        std::cin >> id;
+    } while (!validInput(id, wkn, name, true));
     std::cout << "A new share with the following details will be created: " << std::endl;
     std::cout << "Name: " << name << std::endl;
     std::cout << "WKN: " << wkn << std::endl;
     std::cout << "ID: " << id << std::endl;
-    std::cout << "Continue creating/import data? (y/n): ";
+    std::cout << "Continue creating? (y/n): ";
     std::cin >> contin;
     if (contin == "y") {
-        std::ifstream input_file;
-        do {
-            std::string pathToFile;
-            std::cout << "Please enter the absolute path of the course data you want to import: ";
-            std::cin >> pathToFile;
-            input_file = std::ifstream(pathToFile);
-        } while (!input_file);
+        Share share(name, id, wkn);
+        share_p = hashTable.insert(std::move(share)); //ownership to hashtable with move
+    } else {
+        std::cout << "Operation aborted.";
+        return nullptr;
+    }
 
-        std::cout << "Found file. Start import? (y/n): ";
+    if(!share_p) {
+        std::cout << "Inserting the share failed." << std::endl;
+    }
+    return share_p;
+}
+
+template<HashTable::KeyType keytype>
+Share* search<keytype>(std::string& key) {
+    Share * share;
+    if constexpr (keytype) {
+        share = hashTable.get_by_name(key);
+    } else {
+        share = hashTable.get_by_id(key);
+    }
+    // does work with when its nullptr?
+    if(!share) {
+        std::cout << "No share with specified information found." << std::endl;
+    }
+    return share;
+}
+
+void updateImport(Share* share) {
+    std::string contin;
+    //now either share found with name or id or nullptr
+    if (share) {
+        std::cout << "Share found. Continue importing? (y/n): ";
         std::cin >> contin;
         if (contin == "y") {
-            std::cout << "importing please wait...";
-            std::array<Day, 30> days = import_fromFile(input_file);
-            share = Share(name, id, wkn, days);
-            //do i need to close it here or is it good enough if i close the reference
+            std::ifstream input_file;
+            do {
+                std::string pathToFile;
+                std::cout << "Please enter the absolute path of the course data you want to import: ";
+                std::cin >> pathToFile;
+                input_file = std::ifstream(pathToFile);
+            } while (!input_file);
+            std::cout << "Found file. Start import? (y/n): ";
+            std::cin >> contin;
+            if (contin == "y") {
+                std::cout << "importing please wait...";
+                std::array<Day, 30> days = import_fromFile(input_file);
+                //think more about that maybe
+                share->days = days;
+            } else {
+                std::cout << "operation aborted" << std::endl;
+                input_file.close();     //dont forget to close in either case
+            }
         } else {
-            std::cout << "operation aborted" << std::endl;
-            input_file.close();     //dont forget to close in either case
+            std::cout << "Operation aborted." << std::endl;
+            return;
         }
     } else {
-        std::cout << "operation aborted" << std::endl;
+        std::cout << "No share with specified information found." << std::endl;
+        return;
     }
-    std::cout << "Done!" << std::endl;
-    return share;
+}
+
+// returns new Share on success nullptr on failure
+void import() {
+    Share *share;
+    std::string name;
+    std::string id; //kürzel
+    std::string contin;
+
+    std::cout << "Please press (1) to update share information or (2) to make new share with the data: ";
+    std::cin >> contin;
+    if (contin == "1") {
+        std::cout << "Press (1) to enter the name of the share (2) to enter id of the share: ";
+        std::cin >> contin;
+        if (contin == "1") {
+            std::cout << "Enter name of share to update: ";
+            std::cin >> name;
+            // noch überlegen ob wrapper methode notwendig
+            share = search<HashTable::KeyType::NAME>(name);
+        } else if (contin == "2") {
+            std::cout << "Enter id of share to update: ";
+            std::cin >> id;
+            share = search<HashTable::KeyType::ID>(id);
+        } else {
+            std::cout << "Not a valid option. Quitting.";
+            return;
+        }
+    } else if(contin == "2") {
+        share = add();
+    } else {
+        std::cout << "No valid input. Aborting." << std::endl;
+    }
+
+    if(!share) {
+        return;
+    }
+    //at this point its sure that the share * is valid now we can do updateImport
+    updateImport(share);
 }
 
 void load() {
