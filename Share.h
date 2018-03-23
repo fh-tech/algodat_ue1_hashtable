@@ -49,8 +49,22 @@ struct Share {
                && wkn == other.wkn
                && days == other.days;
     }
+
+
+    void printDay(int number) const {
+        Day day = days[number];
+        std::cout << "Day: " << day.date << std::endl;
+        std::cout << "Lowest: " << day.low << std::endl;
+        std::cout << "Highest: " << day.high << std::endl;
+        std::cout << "Volume: " << day.volume << std::endl;
+        std::cout << "Open: " << day.open << std::endl;
+        std::cout << "Close: " << day.close << std::endl;
+        std::cout << "Adj_close: " << day.adj_close << std::endl;
+    }
 };
 
+
+//REVIEW: why outside of share class
 void to_json(json &j, const Share &s) {
     j["name"] = s.name;
     j["wkn"] = s.wkn;

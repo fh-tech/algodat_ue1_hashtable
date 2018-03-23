@@ -46,7 +46,7 @@ uint32_t make_ts(std::string &date) {
             return ts;
         }
     }
-    return 0; //TODO: think about what to do if strptime/mktime fails
+    return 0; //REVIEW: think about what to do if strptime/mktime fails
 }
 
 std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
@@ -57,10 +57,10 @@ std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
         getline(input_file, line);
         std::replace(line.begin(), line.end(), ',', ' ');
         std::stringstream line_stream(line);
-        //TODO: maybe read first line and check if identical ?
+        //REVIEW: maybe read first line and check if identical ?
         if (line_count > -1 &&
             !line.empty()) { // line.empty important otherwise unnecessary iteration if newline at end
-            //FIXME: i thought when i make a new variable in loop it is not related to last in any way and is initialized by default with default constructor...
+            //REVIEW: i thought when i make a new variable in loop it is not related to last in any way and is initialized by default with default constructor...
             std::string date{}; // always initialize with default values so on fail when filling no values again
             float open{};
             float high{};
@@ -124,24 +124,32 @@ Share* add() {
     return share_p;
 }
 
-template<HashTable::KeyType keytype>
-Share* search(std::string& key) {
+
+Share* search() {
+    std::string contin;
+    std::string name;
+    std::string id;
     Share * share;
-    if constexpr (keytype) {
-        share = hashTable.get_by_name(key);
+    std::cout << "Press (1) to enter the name of the share (2) to enter id of the share: ";
+    std::cin >> contin;
+    if (contin == "1") {
+        std::cout << "Enter name of share: ";
+        std::cin >> name;
+        // noch überlegen ob wrapper methode notwendig
+        share = hashTable.get_by_name(name);
+    } else if (contin == "2") {
+        std::cout << "Enter id of share: ";
+        std::cin >> id;
+        share = hashTable.get_by_id(id);
     } else {
-        share = hashTable.get_by_id(key);
-    }
-    // does work with when its nullptr?
-    if(!share) {
-        std::cout << "No share with specified information found." << std::endl;
+        std::cout << "Not a valid option. Quitting.";
+        return nullptr;
     }
     return share;
 }
 
 void updateImport(Share* share) {
     std::string contin;
-    //now either share found with name or id or nullptr
     if (share) {
         std::cout << "Share found. Continue importing? (y/n): ";
         std::cin >> contin;
@@ -185,19 +193,9 @@ void import() {
     std::cout << "Please press (1) to update share information or (2) to make new share with the data: ";
     std::cin >> contin;
     if (contin == "1") {
-        std::cout << "Press (1) to enter the name of the share (2) to enter id of the share: ";
-        std::cin >> contin;
-        if (contin == "1") {
-            std::cout << "Enter name of share to update: ";
-            std::cin >> name;
-            // noch überlegen ob wrapper methode notwendig
-            share = search<HashTable::KeyType::NAME>(name);
-        } else if (contin == "2") {
-            std::cout << "Enter id of share to update: ";
-            std::cin >> id;
-            share = search<HashTable::KeyType::ID>(id);
-        } else {
-            std::cout << "Not a valid option. Quitting.";
+        share = search();
+        if(!share) {
+            std::cout << "No share with specified information found" << std::endl;
             return;
         }
     } else if(contin == "2") {
@@ -205,7 +203,6 @@ void import() {
     } else {
         std::cout << "No valid input. Aborting." << std::endl;
     }
-
     if(!share) {
         return;
     }
@@ -245,6 +242,14 @@ void save() {
         std::cout << "unable to read json file" << std::endl;
     }
 }
+
+//TODO: auslagern der methoden in helper implementation file maybe
+//TODO: write delete method
+//TODO: write own plot method i think daniels is wrong it plots something with empty days (max value)
+//REVIEW the json save part daniel made
+//TODO: implement what to do when a share was found
+//TODO: write tests for everything too (think about some edge cases)
+
 
 enum Command {
     ADD = 1,
@@ -289,6 +294,14 @@ void parse_input(std::string &input) {
             std::cout << "Quitting program." << std::endl;
             exit(0);
         case SEARCH: //search_name(); decide on kind here
+            Share* share = search();
+            if(!share) {
+                std::cout << "Share could not be found." << std::endl;
+            } else {
+                //REVIEW: äh was wollen wir dann eigentlich machen?
+                std::cout << "Share found." << std::endl;
+//                share->printDay(0);
+            }
             return;
         case INVALID:
             std::cout << "Wrong input. Try again." << std::endl;
