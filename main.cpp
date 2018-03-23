@@ -70,70 +70,70 @@ void save() {
     }
 }
 
-static std::array<std::string, 8> CommandStr =
-        {"add", "delete", "import", "plot", "save", "load", "quit", "search"};
 
 enum Command {
     ADD = 0,
     DELETE = 1,
     IMPORT = 2,
-    PLOT = 3,
-    SAVE = 4,
-    LOAD = 5,
-    QUIT = 6,
-    SEARCH_NAME = 7,
-    SEARCH_KEY = 8,
+    SEARCH = 3,
+    PLOT = 4,
+    SAVE = 5,
+    LOAD = 6,
+    QUIT = 7,
     INVALID = -1
 };
 
-void parse_input(const std::string &input) {
-    for (auto i = 0; i < CommandStr.size(); i++) {
-        if (CommandStr[i] == input) {
-            auto c = static_cast<Command>(i);
-            switch (c) {
-                case ADD:    //add();
-                    return;
-                case DELETE: //delete();
-                    return;
-                case IMPORT:
-                    import();
-                    return;
-                case PLOT:
-                    plot();
-                    return;
-                case SAVE:  save();
-                    return;
-                case LOAD:  load();
-                    return;
-
-                case QUIT:
-                    exit(0);
-
-                case SEARCH_NAME: //search_name();
-                    return;
-                case SEARCH_KEY: //search_id();
-                    return;
-                default:
-                    exit(1);
-            }
-        }
+void parse_input(std::string &input) {
+    int command;
+    try {
+        command = std::stoi(input);
+        if (command < -1 || command > 7) command = -1;
+    } catch (std::invalid_argument) {
+        command = -1;
     }
-    std::cout << "Wrong input. Try again." << std::endl;
 
+    switch (command) {
+        case ADD:    //add();
+            return;
+        case DELETE: //delete();
+            return;
+        case IMPORT:
+            import();
+            return;
+        case PLOT:
+            plot();
+            return;
+        case SAVE:
+            save();
+            return;
+        case LOAD:
+            load();
+            return;
+        case QUIT:
+            std::cout << "Quitting program." << std::endl;
+            exit(0);
+        case SEARCH: //search_name(); decide on kind here
+            return;
+        case INVALID:
+            std::cout << "Wrong input. Try again." << std::endl;
+            return;
+        default:
+            exit(1);
+    }
 }
 
 int main() {
     std::cout <<
               "============= Available Actions ================="
                       "\n"
-                      "ADD: Manually input new Stock\n"
-                      "DEL: Remove a stock by ID or name\n"
-                      "IMPORT: Import stock information form a .csv file\n"
-                      "SEARCH: Search information for a specific stock either by name or ID\n"
-                      "PLOT: Visualize stock data\n"
-                      "SAVE: Save current program data to json file\n"
-                      "LOAD: Load data from a json file\n"
-                      "QUIT: Exits the program. Make sure to save before." << std::endl;
+                      "(1)ADD: Manually input new Stock\n"
+                      "(2)DEL: Remove a stock by ID or name\n"
+                      "(3)IMPORT: Import stock information form a .csv file\n"
+                      "(3)SEARCH: Search information for a specific stock either by name or ID\n"
+                      "(4)PLOT: Visualize stock data\n"
+                      "(5)SAVE: Save current program data to json file\n"
+                      "(6)LOAD: Load data from a json file\n"
+                      "(7)QUIT: Exits the program. Make sure to save before." << std::endl;
     while (true) {
         std::cout << " > " << std::flush;
 
