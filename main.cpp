@@ -85,7 +85,7 @@ bool validInput(const std::string &id, const std::string &wkn, const std::string
     return valid;
 }
 
-Share *add() {
+Share* add() {
     Share share{};
     std::string name;
     std::string wkn;
@@ -118,12 +118,14 @@ Share *add() {
 
     if(!share_p) {
         std::cout << "Inserting the share failed." << std::endl;
+    } else {
+        std::cout << "Successfully added the share." << std::endl;
     }
     return share_p;
 }
 
 template<HashTable::KeyType keytype>
-Share* search<keytype>(std::string& key) {
+Share* search(std::string& key) {
     Share * share;
     if constexpr (keytype) {
         share = hashTable.get_by_name(key);
@@ -158,6 +160,7 @@ void updateImport(Share* share) {
                 std::array<Day, 30> days = import_fromFile(input_file);
                 //think more about that maybe
                 share->days = days;
+                std::cout << "Import was successful" << std::endl;
             } else {
                 std::cout << "operation aborted" << std::endl;
                 input_file.close();     //dont forget to close in either case
@@ -244,14 +247,14 @@ void save() {
 }
 
 enum Command {
-    ADD = 0,
-    DELETE = 1,
-    IMPORT = 2,
-    SEARCH = 3,
-    PLOT = 4,
-    SAVE = 5,
-    LOAD = 6,
-    QUIT = 7,
+    ADD = 1,
+    DELETE = 2,
+    IMPORT = 3,
+    SEARCH = 4,
+    PLOT = 5,
+    SAVE = 6,
+    LOAD = 7,
+    QUIT = 8,
     INVALID = -1
 };
 
@@ -259,13 +262,14 @@ void parse_input(std::string &input) {
     int command;
     try {
         command = std::stoi(input);
-        if (command < -1 || command > 7) command = -1;
+        if (command < 1 || command > 8) command = -1;
     } catch (std::invalid_argument) {
         command = -1;
     }
 
     switch (command) {
         case ADD:    //add();
+            add();
             return;
         case DELETE: //delete();
             return;
@@ -295,18 +299,20 @@ void parse_input(std::string &input) {
 }
 
 int main() {
-    std::cout <<
-              "============= Available Actions ================="
-                      "\n"
-                      "(1)ADD: Manually input new Stock\n"
-                      "(2)DEL: Remove a stock by ID or name\n"
-                      "(3)IMPORT: Import stock information form a .csv file\n"
-                      "(3)SEARCH: Search information for a specific stock either by name or ID\n"
-                      "(4)PLOT: Visualize stock data\n"
-                      "(5)SAVE: Save current program data to json file\n"
-                      "(6)LOAD: Load data from a json file\n"
-                      "(7)QUIT: Exits the program. Make sure to save before." << std::endl;
     while (true) {
+        std::cout <<
+                  "\n"
+                  "============= Available Actions ================="
+                          "\n"
+                          "(1)ADD: Manually input new Stock\n"
+                          "(2)DEL: Remove a stock by ID or name\n"
+                          "(3)IMPORT: Import stock information form a .csv file\n"
+                          "(4)SEARCH: Search information for a specific stock either by name or ID\n"
+                          "(5)PLOT: Visualize stock data\n"
+                          "(6)SAVE: Save current program data to json file\n"
+                          "(7)LOAD: Load data from a json file\n"
+                          "(8)QUIT: Exits the program. Make sure to save before." << std::endl;
+
         std::cout << " > " << std::flush;
 
         std::string user_input;
