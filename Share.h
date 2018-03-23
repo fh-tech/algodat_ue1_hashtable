@@ -19,34 +19,39 @@ struct Share {
 
 
     Share() = default;
-    Share(const Share& other) = default;
 
-    Share(std::string&& name, std::string&& id, std::string&& wkn)
-        : name(std::move(name))
-        , wkn(std::move(wkn))
-        , id(std::move(id))
-    {
+    Share(const Share &other) = default;
+
+    Share(std::string &&name, std::string &&id, std::string &&wkn)
+            : name(std::move(name)), wkn(std::move(wkn)), id(std::move(id)) {
     }
 
-    Share(Share&& other) = default;
+    Share(std::string &name, std::string &id, std::string &wkn, std::array<Day, 30> &days)
+            : name(name),
+              id(id),
+              wkn(wkn),
+              days(days) {
 
-    bool operator==(const Share& other) const
-    {
+    }
+
+    Share(Share &&other) = default;
+
+    bool operator==(const Share &other) const {
         return name == other.name
-            && id == other.id
-            && wkn == other.wkn
-            && days == other.days;
+               && id == other.id
+               && wkn == other.wkn
+               && days == other.days;
     }
 };
 
-void to_json(json& j, const Share& s){
+void to_json(json &j, const Share &s) {
     j["name"] = s.name;
     j["wkn"] = s.wkn;
     j["id"] = s.id;
     j["days"] = s.days;
 }
 
-void from_json(const json& j, Share& s){
+void from_json(const json &j, Share &s) {
     s.name = j.at("name").get<std::string>();
     s.id = j.at("id").get<std::string>();
     s.wkn = j.at("wkn").get<std::string>();

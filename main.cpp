@@ -116,7 +116,7 @@ Share import() {
         if (contin == "y") {
             std::cout << "importing please wait...";
             std::array<Day, 30> days = import_fromFile(input_file);
-            share = Share(name, wkn, id, days);
+            share = Share(name, id, wkn, days);
             //do i need to close it here or is it good enough if i close the reference
         } else {
             std::cout << "operation aborted" << std::endl;
