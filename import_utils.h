@@ -28,6 +28,7 @@ std::deque<std::string> parse_csv(std::ifstream &input_file) {
 }
 
 // file needs to have newest entrys last!
+//TODO: ensure that days arrays always have 30 size
 std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
     std::deque<std::string> lines = parse_csv(input_file);
     std::array<Day, 30> days{};
@@ -86,11 +87,11 @@ void updateImport(Share* share) {
                 // would have been nice but fails if for example
                 // actual = 3, 15, 18,...
                 // new =   10, 11, 12, 13, 14
-                int i = 0;
-                for(int i = 0; i < 30 ; i++) {
+                int i;
+                for(i = 30; i > 0; i-- ) {
                     if(days_new[i].date > days_actual[i].date) break;
                 }
-                memcpy(&days_actual[i], &days_new[i], (30 - i) * sizeof(Day));
+                memcpy(&days_actual[0], &days_new[0], i * sizeof(Day));
 
 
                 //REVIEW: more complicated but works even in edge cases like above mentioned
