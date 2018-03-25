@@ -114,3 +114,4 @@ TEST(ht_insert, hashtable_no_leak_when_double_insert) {
     ASSERT_EQ(ht.insert(std::move(sc)), nullptr);
 
 }
+

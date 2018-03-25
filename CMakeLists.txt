@@ -12,8 +12,8 @@ include_directories(lib/googletest-master/googletest/include)
 #include_directories(lib/benchmark/include)
 include_directories(lib/json/include)
 
-add_executable(hashtable main.cpp Share.h Day.h hashmap.h hashmap_impl.h hashmap_iter.h time_utils.h)
-add_executable(runTests tests/test.cpp tests/tests.cpp tests/utils.h time_utils.h)
+add_executable(hashtable main.cpp Share.h Day.h hashmap.h hashmap_impl.h hashmap_iter.h time_utils.h import_utils.h main_utils.h)
+add_executable(runTests tests/test.cpp tests/tests.cpp tests/utils.h time_utils.h import_utils.h)
 #add_executable(runBench bench/bm_hashtable.cpp)
 
 target_link_libraries(hashtable gtest gtest_main)
