@@ -376,11 +376,11 @@ void ht_remove_and_get(int iterations, float load_factor_before, float load_fact
 int main() {
     std::cout << "=== inserting ===" << std::endl;
 
-    stdmap_one_rand_insert(1000, .00);
-    stdmap_one_rand_insert(1000, .25);
-    stdmap_one_rand_insert(1000, .50);
-    stdmap_one_rand_insert(1000, .75);
-    stdmap_one_rand_insert(1000, .90);
+    stdmap_one_rand_insert(10000, .00);
+    stdmap_one_rand_insert(10000, .25);
+    stdmap_one_rand_insert(10000, .50);
+    stdmap_one_rand_insert(10000, .75);
+    stdmap_one_rand_insert(10000, .90);
 
     ht_one_rand_insert(10000, 0   );
     ht_one_rand_insert(10000, 0.25);
