@@ -134,6 +134,8 @@ std::unique_ptr<Share> HashTable::remove(std::string &key)
         if (bucket.other == nullptr)
             return nullptr;
 
+        if(bucket.other == &m_invalid) continue;
+
         if (getKey<keyType>(*bucket.data) == key) {
             bucket.other->other = &m_invalid;
             bucket.other = &m_invalid;
