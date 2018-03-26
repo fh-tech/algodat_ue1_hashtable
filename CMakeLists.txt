@@ -16,6 +16,8 @@ add_executable(hashtable main.cpp Share.h Day.h hashmap.h hashmap_impl.h hashmap
 add_executable(runTests tests/test.cpp tests/tests.cpp tests/utils.h)
 add_executable(runBench bench/bm_hashtable.cpp)
 
+add_executable(bench bench/bm_main.cpp)
+
 target_link_libraries(hashtable gtest gtest_main)
 target_link_libraries(runTests gtest gtest_main)
 target_link_libraries(runBench benchmark)

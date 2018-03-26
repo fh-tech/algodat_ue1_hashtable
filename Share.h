@@ -20,6 +20,7 @@ struct Share {
 
     Share() = default;
     Share(const Share& other) = default;
+    Share& operator=(const Share& other) = default;
 
     Share(std::string&& name, std::string&& id, std::string&& wkn)
         : name(std::move(name))
