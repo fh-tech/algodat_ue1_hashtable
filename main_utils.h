@@ -21,7 +21,7 @@ void parse_input(std::string &input);
 
 #include "import_utils.h"
 
-enum Command {
+enum Command : int {
     ADD = 1,
     DELETE = 2,
     IMPORT = 3,
