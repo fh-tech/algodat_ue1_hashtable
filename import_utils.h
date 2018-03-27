@@ -11,6 +11,14 @@
 #include <algorithm>
 #include "Day.h"
 #include "Share.h"
+#include "main_utils.h"
+
+std::deque<std::string> parse_csv(std::ifstream &input_file);
+std::array<Day, 30> import_fromFile(std::ifstream &input_file);
+void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source);
+void updateImport(Share* share);
+void import();
+
 
 // newest entries are at front now!
 std::deque<std::string> parse_csv(std::ifstream &input_file) {
@@ -28,7 +36,6 @@ std::deque<std::string> parse_csv(std::ifstream &input_file) {
 }
 
 // file needs to have newest entrys last!
-//TODO: ensure that days arrays always have 30 size
 std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
     std::deque<std::string> lines = parse_csv(input_file);
     std::array<Day, 30> days{};
@@ -63,6 +70,26 @@ std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
     return days;
 }
 
+
+void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source) {
+    //update logic
+    // would have been nice but fails if for example (but irrelevant no exported files look like that)
+    // actual = 18, 15, 3,...
+    // new =    14, 13, 12, 11, 10
+    int i;
+    int j;
+    for(i = 29; i > 0; i-- ) {
+        if(source[i].date > target[i].date) {
+            j = i;
+            while(source[j].date > target[j].date && j > 0) {
+                j--;
+            }
+            break;
+        }
+    }
+    memcpy(&target[j], &source[j], ((i+1)-j) * sizeof(Day));     //i + 1 because to index 18 (19 elements)
+}
+
 void updateImport(Share* share) {
     std::string contin;
     if (share) {
@@ -83,24 +110,8 @@ void updateImport(Share* share) {
                 std::array<Day, 30> days_new = import_fromFile(input_file);
                 std::array<Day, 30>& days_actual = share->days;
 
-                //update logic
-                // would have been nice but fails if for example
-                // actual = 3, 15, 18,...
-                // new =   10, 11, 12, 13, 14
-                int i;
-                for(i = 30; i > 0; i-- ) {
-                    if(days_new[i].date > days_actual[i].date) break;
-                }
-                memcpy(&days_actual[0], &days_new[0], i * sizeof(Day));
+                updateDays(days_actual, days_new);
 
-
-                //REVIEW: more complicated but works even in edge cases like above mentioned
-                /*for(int i = 0; i < 30; i++) {
-                    if(days_new[i].date > days_actual[i].date) days_actual[i] = days_new[i];
-                    for(int j = 0; j < i+1; j++) {
-                        if(days_new[j].date > days_actual[i].date && days_new[j].date < days_actual[i+1].date) days_actual[i] = days_new[j];
-                    }
-                }*/
                 std::cout << "Import was successful" << std::endl;
             } else {
                 std::cout << "operation aborted" << std::endl;

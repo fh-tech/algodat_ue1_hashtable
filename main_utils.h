@@ -266,6 +266,6 @@ void parse_input(std::string &input) {
 }
 //REVIEW the json save part daniel made
 //TODO: write tests for everything too (think about some edge cases)
-//FIXME: saving then loading then searching for name of share produces SIGSEGV
+//FIXME: adding share, then saving, then loading, then quit --> double free or corruption (out)
 
 #endif //HASHTABLE_MAIN_UTILS_H

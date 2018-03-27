@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include "../hashmap.h"
 #include "utils.h"
+#include "../main_utils.h"
 #include <nlohmann/json.hpp>
 
 
@@ -115,3 +116,17 @@ TEST(ht_insert, hashtable_no_leak_when_double_insert) {
 
 }
 
+
+TEST(update_days, import_utils) {
+    HashTable ht{100};
+    std::ifstream input_file = std::ifstream("/home/vik/Repos/ue1_hashtable/tests/data/MSFT.csv");
+    std::array<Day, 30> target = import_fromFile(input_file);
+    input_file = std::ifstream("/home/vik/Repos/ue1_hashtable/tests/data/MSFT2.csv");
+    std::array<Day, 30> source = import_fromFile(input_file);
+
+    updateDays(target, source);   //problem that i could fill all 30 days but update cant do it
+
+    int i = 0;
+
+
+}
