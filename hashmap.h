@@ -114,18 +114,14 @@ public:
 #include "hashmap_impl.h"
 
 void from_json(const json& j, HashTable& ht){
-    ht.m_idTable.resize(j["capacity"]);
-    ht.m_nameTable.resize(j["capacity"]);
-    for(auto ele: j["elements"]){
-        ht.insert(ele);
-    }
+
 }
 
 static void to_json(json& j, const HashTable& ht){
     j["capacity"] = ht.m_idTable.size();
     std::vector<Share> shs{};
     for(auto& b: ht.m_idTable){
-        if(b.other != nullptr || b.other != &ht.m_invalid){
+        if(b.other != nullptr && b.other != &ht.m_invalid){
             if(b.data)
                 shs.push_back(*b.data);
 

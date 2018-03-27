@@ -74,23 +74,6 @@ TEST(json, share_serialier){
     ASSERT_EQ(s, s2);
 }
 
-TEST(json, hashtable_serialier){
-
-    auto shares = random_shares(10);
-    HashTable ht(15);
-
-    for(auto&& s: shares)
-        ht.insert(std::move(s));
-
-    json j = ht;
-
-    std::cout << j;
-
-    HashTable ht2 = j;
-
-    ASSERT_EQ(ht, ht2);
-}
-
 TEST(ht_insert, hashtable_no_leak_when_double_insert) {
     HashTable ht{100};
 
@@ -117,7 +100,7 @@ TEST(ht_insert, hashtable_no_leak_when_double_insert) {
 }
 
 
-TEST(update_days, import_utils) {
+/*TEST(update_days, import_utils) {
     HashTable ht{100};
     std::ifstream input_file = std::ifstream("/home/vik/Repos/ue1_hashtable/tests/data/MSFT.csv");
     std::array<Day, 30> target = import_fromFile(input_file);
@@ -127,6 +110,4 @@ TEST(update_days, import_utils) {
     updateDays(target, source);   //problem that i could fill all 30 days but update cant do it
 
     int i = 0;
-
-
-}
+}*/

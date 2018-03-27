@@ -1,0 +1,27 @@
+=== inserting ===
+std::unordered_map: average: 319ns from 10000 iterationsto insert 1 random share with load factor:0
+std::unordered_map: average: 875ns from 10000 iterationsto insert 1 random share with load factor:0.23497
+std::unordered_map: average: 1078ns from 10000 iterationsto insert 1 random share with load factor:0.46994
+std::unordered_map: average: 1234ns from 10000 iterationsto insert 1 random share with load factor:0.704911
+std::unordered_map: average: 1417ns from 10000 iterationsto insert 1 random share with load factor:0.845801
+hashtable: average: 168ns from 10000 iterationsto insert 1 random share with load factor:0
+hashtable: average: 272ns from 10000 iterationsto insert 1 random share with load factor:0.25
+hashtable: average: 390ns from 10000 iterationsto insert 1 random share with load factor:0.5
+hashtable: average: 540ns from 10000 iterationsto insert 1 random share with load factor:0.75
+hashtable: average: 842ns from 10000 iterationsto insert 1 random share with load factor:0.9
+vector: average: 2201ns from 10000 iterations to insert 1 random share at random position
+vector: average: 62ns from 10000 iterations to insert 1 random share at back
+list: average: 6559ns from 10000 iterations to insert 1 random share at back
+list: average: 197ns from 10000 iterations to insert 1 random share at rand pos
+=== look up ===
+hashtable: average: 151ns from 10000 iterations to look up 1 random share with load factor: 0.1
+hashtable: average: 183ns from 10000 iterations to look up 1 random share with load factor: 0.25
+hashtable: average: 227ns from 10000 iterations to look up 1 random share with load factor: 0.5
+hashtable: average: 285ns from 10000 iterations to look up 1 random share with load factor: 0.75
+hashtable: average: 332ns from 10000 iterations to look up 1 random share with load factor: 0.9
+vector: average: 7213ns from 10000 iterations to look up 1 random share by key
+list: average: 9466ns from 10000 iterations to look up 1 random share by key
+vector: average: 48ns from 10000 iterations to look up 1 random share by pos
+list: average: 5670ns from 10000 iterations to look up 1 random share by pos
+deleting
+hashtable: average: 138ns from 10000 iterations to look up 1 element after filling up to 0.95and then deleting to0.1
