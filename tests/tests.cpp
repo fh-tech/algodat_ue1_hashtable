@@ -117,7 +117,7 @@ TEST(ht_insert, hashtable_no_leak_when_double_insert) {
 }
 
 
-TEST(update_days, import_utils) {
+/*TEST(update_days, import_utils) {
     HashTable ht{100};
     std::ifstream input_file = std::ifstream("/home/vik/Repos/ue1_hashtable/tests/data/MSFT.csv");
     std::array<Day, 30> target = import_fromFile(input_file);
@@ -129,4 +129,4 @@ TEST(update_days, import_utils) {
     int i = 0;
 
 
-}
+}*/
