@@ -7,13 +7,14 @@
 
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include "time_utils.h"
 
 using json = nlohmann::json;
 
 class Day {
 public:
 
-    uint32_t date;
+    time_t date;
     uint32_t volume;
 
     float open;
@@ -36,6 +37,16 @@ public:
                && close == other.close
                && adj_close == other.adj_close
                && volume == other.volume;
+    }
+
+    void printDay() const {
+        std::cout << "Day: " << ts_toDate(this->date) << std::endl;
+        std::cout << "Lowest: " << this->low << std::endl;
+        std::cout << "Highest: " << this->high << std::endl;
+        std::cout << "Volume: " << this->volume << std::endl;
+        std::cout << "Open: " << this->open << std::endl;
+        std::cout << "Close: " << this->close << std::endl;
+        std::cout << "Adj_close: " << this->adj_close << std::endl;
     }
 };
 
