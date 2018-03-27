@@ -33,7 +33,7 @@ Bucket* HashTable::insert_side(std::string& s)
 
     for (Bucket& bucket : iter<keyType>(s)) {
 
-        if (bucket.data == nullptr
+        if (bucket.other == nullptr
             || bucket.other == &m_invalid
             || getKey<keyType>(*bucket.data) == s) {
 

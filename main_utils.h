@@ -42,7 +42,7 @@ enum Command : int {
 
 bool validInput(const std::string &id, const std::string &wkn, const std::string &name, bool verbose) {
     bool valid = !name.empty() && !id.empty() && !wkn.empty();
-    if (!valid) std::cout << "No empty values allowed" << std::endl;
+    if (verbose && !valid) std::cout << "No empty values allowed" << std::endl;
     return valid;
 }
 
