@@ -10,14 +10,13 @@
 
 #include "../Share.h"
 
-thread_local static
-std::default_random_engine rnd{std::random_device{}()};
+static std::default_random_engine rnd{std::random_device{}()};
 
 std::string random_str(std::string::size_type len){
     static auto& chars = "0123456789ABCDEF";
 
-    thread_local static
-    std::uniform_int_distribution<std::string::size_type> pick(0, sizeof(chars)-2);
+
+    static std::uniform_int_distribution<std::string::size_type> pick(0, sizeof(chars)-2);
 
     std::string s;
     s.reserve(len);
@@ -29,7 +28,7 @@ std::string random_str(std::string::size_type len){
 }
 
 Day random_day(){
-    std::normal_distribution<float> rng{100, 30};
+    static std::normal_distribution<float> rng{100, 30};
     return Day{
             (uint32_t) rng(rnd),
             rng(rnd),
@@ -44,9 +43,9 @@ Day random_day(){
 
 Share random_share() {
     Share s {
-            std::move(random_str(5)),
-            std::move(random_str(5)),
-            std::move(random_str(5)),
+            std::move(random_str(20)),
+            std::move(random_str(20)),
+            std::move(random_str(20)),
 
     };
 

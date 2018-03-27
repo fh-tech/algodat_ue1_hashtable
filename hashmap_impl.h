@@ -28,16 +28,15 @@ constexpr std::vector<Bucket>& HashTable::getTable()
 }
 
 template <HashTable::KeyType keyType>
-Bucket* HashTable::insert_side(Share* s)
+Bucket* HashTable::insert_side(std::string& s)
 {
 
-    for (Bucket& bucket : iter<keyType>(getKey<keyType>(*s))) {
+    for (Bucket& bucket : iter<keyType>(s)) {
 
         if (bucket.data == nullptr
             || bucket.other == &m_invalid
-            || getKey<keyType>(*bucket.data) == getKey<keyType>(*s)) {
+            || getKey<keyType>(*bucket.data) == s) {
 
-            bucket.data = s;
             return &bucket;
         }
     }
@@ -57,10 +56,24 @@ Share* HashTable::insert(Share&& share)
 {
     auto sh_ptr = new Share(std::move(share));
 
-    if (auto id_ptr = insert_side<ID>(sh_ptr)) {
-        if(auto name_ptr = insert_side<NAME>(sh_ptr)) {
-            id_ptr->other = name_ptr;
+    if (auto id_ptr = insert_side<ID>(sh_ptr->id)) {
+        if(auto name_ptr = insert_side<NAME>(sh_ptr->name)) {
+
+            if(id_ptr->data || name_ptr->data){
+                if(   id_ptr->other == name_ptr
+                   && name_ptr->other == id_ptr){
+                    delete id_ptr->data;
+                    id_ptr->data = sh_ptr;
+                    name_ptr->data = sh_ptr;
+                    return sh_ptr;
+                } else return nullptr;
+            }
+
+            name_ptr->data = sh_ptr;
+            id_ptr->data = sh_ptr;
+
             name_ptr->other = id_ptr;
+            id_ptr->other = name_ptr;
 
             return sh_ptr;
         } else {
@@ -121,11 +134,14 @@ std::unique_ptr<Share> HashTable::remove(std::string &key)
         if (bucket.other == nullptr)
             return nullptr;
 
+        if(bucket.other == &m_invalid) continue;
+
         if (getKey<keyType>(*bucket.data) == key) {
             bucket.other->other = &m_invalid;
             bucket.other = &m_invalid;
             auto tmp = bucket.data;
-            return std::unique_ptr<Share>(std::move(tmp));
+            bucket.data = nullptr;
+            return std::unique_ptr<Share>(tmp);
         }
     }
 }

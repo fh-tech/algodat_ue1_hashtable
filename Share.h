@@ -20,20 +20,27 @@ struct Share {
 
     Share() = default;
     Share(const Share& other) = default;
+    //so move and copy works otherwise default move constructor deletes copy constructor
+    Share& operator=(const Share& other) = default;
+    Share(Share &&other) = default;
 
-    Share(std::string&& name, std::string&& id, std::string&& wkn)
-        : name(std::move(name))
-        , wkn(std::move(wkn))
-        , id(std::move(id))
-    {
+    Share(std::string &&name, std::string &&id, std::string &&wkn)
+            : name(std::move(name)), wkn(std::move(wkn)), id(std::move(id)) {
     }
 
-    Share(Share&& other) noexcept
-        : id(std::move(other.id))
-        , name(std::move(other.name))
-        , wkn(std::move(other.wkn))
-        , days(other.days)
-    {
+    Share(std::string &name, std::string &id, std::string &wkn, std::array<Day, 30> &days)
+            : name(name),
+              id(id),
+              wkn(wkn),
+              days(days) {
+
+    }
+
+    Share(std::string &name, std::string &id, std::string &wkn)
+            : name(name),
+              id(id),
+              wkn(wkn) {
+
     }
 
     bool operator==(const Share& other) const

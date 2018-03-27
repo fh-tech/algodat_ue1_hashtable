@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include "../hashmap.h"
 #include "utils.h"
+#include "../main_utils.h"
 #include <nlohmann/json.hpp>
 
 
@@ -90,3 +91,42 @@ TEST(json, hashtable_serialier){
     ASSERT_EQ(ht, ht2);
 }
 
+TEST(ht_insert, hashtable_no_leak_when_double_insert) {
+    HashTable ht{100};
+
+    auto s = random_share();
+    auto sc = s;
+
+    auto s1 = random_share();
+    auto s1c = s1;
+
+    auto s2 = random_share();
+    auto s2c = s2;
+
+    auto s3 = random_share();
+    auto s3c = s3;
+
+    ht.insert(std::move(s));
+    ht.insert(std::move(s1));
+    ht.insert(std::move(s2));
+
+    sc.id = s2c.id;
+
+    ASSERT_EQ(ht.insert(std::move(sc)), nullptr);
+
+}
+
+
+TEST(update_days, import_utils) {
+    HashTable ht{100};
+    std::ifstream input_file = std::ifstream("/home/vik/Repos/ue1_hashtable/tests/data/MSFT.csv");
+    std::array<Day, 30> target = import_fromFile(input_file);
+    input_file = std::ifstream("/home/vik/Repos/ue1_hashtable/tests/data/MSFT2.csv");
+    std::array<Day, 30> source = import_fromFile(input_file);
+
+    updateDays(target, source);   //problem that i could fill all 30 days but update cant do it
+
+    int i = 0;
+
+
+}
