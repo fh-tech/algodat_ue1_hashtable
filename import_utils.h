@@ -70,12 +70,8 @@ std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
     return days;
 }
 
-
+//update logic
 void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source) {
-    //update logic
-    // would have been nice but fails if for example (but irrelevant no exported files look like that)
-    // actual = 18, 15, 3,...
-    // new =    14, 13, 12, 11, 10
     int i;
     int j;
     for(i = 29; i > 0; i-- ) {

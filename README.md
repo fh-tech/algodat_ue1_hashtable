@@ -2,12 +2,14 @@
 
 # UE1 Hashtable
 
+![overview](img/overview.jpg)
+
 ## 1) Hashfunktion
 * because modulo is an expensive operation we chose to have a table, which is a power of 2(since it is a trivial computation "shift")
 * should be uniform
 * should be fast
 * sometimes specific length or value
-    * maximu
+* chose hash function from slides
 
 ## 2) Kollisionserkennung
 * done via quadratic probing as demanded
@@ -19,7 +21,9 @@
 * Serializing of course data done via json library: https://github.com/nlohmann/json
 
 ## 4) Löschalgorithmus
+![invalid bucket pair](img/invalid_bucketPair.jpg)
 
+![quadratic probing](img/quadratic_probing.jpg)
 
 ## 5) Aufwandsabschätzung
 

@@ -57,7 +57,6 @@ public:
     }
 
     ~HashTable(){
-        std::cout << "destructing hashtable" << std::endl;
         for(auto& b: m_idTable){
             if(b.data)
             {
