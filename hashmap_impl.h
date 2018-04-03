@@ -57,16 +57,17 @@ Share* HashTable::insert(Share&& share)
     auto sh_ptr = new Share(std::move(share));
 
     if (auto id_ptr = insert_side<ID>(sh_ptr->id)) {
-        if(auto name_ptr = insert_side<NAME>(sh_ptr->name)) {
+        if (auto name_ptr = insert_side<NAME>(sh_ptr->name)) {
 
-            if(id_ptr->data || name_ptr->data){
-                if(   id_ptr->other == name_ptr
-                   && name_ptr->other == id_ptr){
+            if (id_ptr->data || name_ptr->data) {
+                if (id_ptr->other == name_ptr
+                    && name_ptr->other == id_ptr) {
                     delete id_ptr->data;
                     id_ptr->data = sh_ptr;
                     name_ptr->data = sh_ptr;
                     return sh_ptr;
-                } else return nullptr;
+                } else
+                    return nullptr;
             }
 
             name_ptr->data = sh_ptr;
@@ -98,11 +99,11 @@ Bucket* HashTable::get_for_key(std::string& key)
 
             return nullptr;
 
-        }else if (bucket.other == &m_invalid) {
+        } else if (bucket.other == &m_invalid) {
 
             toSwitch = &bucket;
 
-        }else if (getKey<keyType>(*bucket.data) == key) {
+        } else if (getKey<keyType>(*bucket.data) == key) {
 
             if (toSwitch) {
                 std::swap(*toSwitch, bucket);
@@ -111,12 +112,12 @@ Bucket* HashTable::get_for_key(std::string& key)
             } else {
                 return &bucket;
             }
-
         };
     }
+    return nullptr;
 }
 
-hash_t HashTable::make_hash(std::string &str) const
+hash_t HashTable::make_hash(std::string& str) const
 {
     hash_t hash_value = 0, base = 127;
     for (auto c : str) {
@@ -125,16 +126,16 @@ hash_t HashTable::make_hash(std::string &str) const
     return hash_value;
 }
 
-
-template<HashTable::KeyType keyType>
-std::unique_ptr<Share> HashTable::remove(std::string &key)
+template <HashTable::KeyType keyType>
+std::unique_ptr<Share> HashTable::remove(std::string& key)
 {
     for (auto& bucket : iter<keyType>(key)) {
 
         if (bucket.other == nullptr)
             return nullptr;
 
-        if(bucket.other == &m_invalid) continue;
+        if (bucket.other == &m_invalid)
+            continue;
 
         if (getKey<keyType>(*bucket.data) == key) {
             bucket.other->other = &m_invalid;
@@ -144,28 +145,30 @@ std::unique_ptr<Share> HashTable::remove(std::string &key)
             return std::unique_ptr<Share>(tmp);
         }
     }
+    return nullptr;
 }
 
-bool HashTable::operator==(const HashTable &other) const {
+bool HashTable::operator==(const HashTable& other) const
+{
 
     std::vector<Share*> thisbucketref{};
     std::vector<Share*> otherbucketref{};
 
-    for(auto b: other.m_idTable){
-        if(b.other != nullptr && b.other != &other.m_invalid){
+    for (auto b : other.m_idTable) {
+        if (b.other != nullptr && b.other != &other.m_invalid) {
             otherbucketref.push_back(b.data);
         }
     }
 
-    for(auto b: m_idTable){
-        if(b.other != nullptr && b.other != &m_invalid){
+    for (auto b : m_idTable) {
+        if (b.other != nullptr && b.other != &m_invalid) {
             thisbucketref.push_back(b.data);
         }
     }
 
     return std::is_permutation(thisbucketref.begin(), thisbucketref.end(),
-                               otherbucketref.begin(), otherbucketref.end(),
-                                [](auto s1, auto s2){ return *s1 == *s2;});
+        otherbucketref.begin(), otherbucketref.end(),
+        [](auto s1, auto s2) { return *s1 == *s2; });
 }
 
 #endif //DEFINITIVEHASH_HASHMAP_IMPL_H

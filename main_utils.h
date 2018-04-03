@@ -5,16 +5,15 @@
 #ifndef HASHTABLE_MAIN_UTILS_H
 #define HASHTABLE_MAIN_UTILS_H
 
+HashTable hashTable{ 1'000 };
 
-HashTable hashTable{1'000};
+bool validInput(const std::string& id, const std::string& wkn, const std::string& name, bool verbose);
 
-bool validInput(const std::string &id, const std::string &wkn, const std::string &name, bool verbose);
-
-Share *add();
+Share* add();
 
 void delete_share();
 
-Share *search();
+Share* search();
 
 void plot();
 
@@ -24,7 +23,7 @@ void save();
 
 void load();
 
-void parse_input(std::string &input);
+void parse_input(std::string& input);
 
 #include "import_utils.h"
 
@@ -40,19 +39,22 @@ enum Command : int {
     INVALID = -1
 };
 
-bool validInput(const std::string &id, const std::string &wkn, const std::string &name, bool verbose) {
+bool validInput(const std::string& id, const std::string& wkn, const std::string& name, bool verbose)
+{
     bool valid = !name.empty() && !id.empty() && !wkn.empty();
-    if (verbose && !valid) std::cout << "No empty values allowed" << std::endl;
+    if (verbose && !valid)
+        std::cout << "No empty values allowed" << std::endl;
     return valid;
 }
 
-Share *add() {
+Share* add()
+{
     Share share{};
     std::string name;
     std::string wkn;
     std::string id; //kürzel
     std::string contin;
-    Share *share_p;
+    Share* share_p;
     do {
         std::cout << "Please enter the name of the share: ";
         std::cin >> name;
@@ -85,9 +87,10 @@ Share *add() {
     return share_p;
 }
 
-void delete_share() {
+void delete_share()
+{
     std::string contin;
-    Share *share;
+    Share* share;
     share = search();
     if (!share) {
         std::cout << "No share with specified information found.";
@@ -103,11 +106,12 @@ void delete_share() {
     }
 }
 
-Share *search() {
+Share* search()
+{
     std::string contin;
     std::string name;
     std::string id;
-    Share *share;
+    Share* share;
     std::cout << "Press (1) to enter the name of the share (2) to enter id of the share: ";
     std::cin >> contin;
     if (contin == "1") {
@@ -126,8 +130,9 @@ Share *search() {
     return share;
 }
 
-void plot() {
-    Share *share;
+void plot()
+{
+    Share* share;
     share = search();
     if (!share) {
         std::cout << "No share with specified information was found. " << std::endl;
@@ -135,28 +140,28 @@ void plot() {
         std::array<std::array<char, 30>, 20> plot{};
         std::memset(plot.begin(), ' ', plot.size() * plot[0].size());
 
-        auto[daymin, daymax] = std::minmax_element(std::begin(share->days), std::end(share->days),
-                                                   [](Day &d0, Day &d1) { return d0.close < d1.close; });
+        auto [daymin, daymax] = std::minmax_element(std::begin(share->days), std::end(share->days),
+            [](Day& d0, Day& d1) { return d0.close < d1.close; });
 
         std::cout << "<--------------------->" << std::endl;
         float delta = daymax->close - daymin->close;
         float delta_row = delta / plot.size();
 
-        for (int i = 0; i < share->days.size(); ++i) {
-            Day &d = share->days[i];
-            plot[static_cast<size_t >(19.0 - ((d.close - daymin->close) / delta_row))][i] = '#';
+        for (size_t i = 0; i < share->days.size(); ++i) {
+            Day& d = share->days[i];
+            plot[static_cast<size_t>(19.0 - ((d.close - daymin->close) / delta_row))][i] = '#';
         }
         std::cout << share->name << "   :    " << share->id << " (" << share->wkn << ")\n";
-        for (auto &row: plot) {
+        for (auto& row : plot) {
             std::cout << std::string(row.cbegin(), row.cend()) << std::endl;
         }
         std::cout << "<--------------------->" << std::endl;
     }
 }
 
-
-void plot2() {
-    Share *share;
+void plot2()
+{
+    Share* share;
     share = search();
     if (!share) {
         std::cout << "No share with specified information was found. " << std::endl;
@@ -165,9 +170,11 @@ void plot2() {
         uint8_t maxStars = 20;
         // find max and min of days
         daymin = daymax = share->days[0].close;
-        for (auto &d : share->days) {
-            if (d.close < daymin) daymin = d.close;
-            if (d.close > daymax) daymax = d.close;
+        for (auto& d : share->days) {
+            if (d.close < daymin)
+                daymin = d.close;
+            if (d.close > daymax)
+                daymax = d.close;
         }
         std::cout << "\n";
         std::cout << std::setw(7) << std::left << "Name:" << share->name << std::endl;
@@ -175,9 +182,9 @@ void plot2() {
         std::cout << std::setw(7) << std::left << "Wkn:" << share->wkn << std::endl;
         std::cout << "<--------------------->" << std::endl;
         int j = 0;
-        for (auto &d : share->days) {
+        for (auto& d : share->days) {
             uint8_t starsRel = (d.close / daymax) * maxStars;
-//            std::cout << "stars: " << starsRel << std::endl;
+            //            std::cout << "stars: " << starsRel << std::endl;
             std::cout << std::setw(2) << j << ":";
             for (int i = 0; i < starsRel; i++) {
                 std::cout << "#";
@@ -189,7 +196,8 @@ void plot2() {
     }
 }
 
-void save() {
+void save()
+{
     std::cout << "Please enter an absolute file name: \n>";
     std::string file_name;
     std::cin >> file_name;
@@ -205,7 +213,8 @@ void save() {
     }
 }
 
-void load() {
+void load()
+{
     std::cout << "Please enter a absolute file name: \n>";
     std::string file_name;
     std::cin >> file_name;
@@ -218,7 +227,7 @@ void load() {
 
         hashTable.m_idTable.resize(j["capacity"]);
         hashTable.m_nameTable.resize(j["capacity"]);
-        for (auto ele: j["elements"]) {
+        for (auto ele : j["elements"]) {
             hashTable.insert(ele);
         }
 
@@ -227,52 +236,54 @@ void load() {
     }
 }
 
-void parse_input(std::string &input) {
+void parse_input(std::string& input)
+{
     int command;
     try {
         command = std::stoi(input);
-        if (command < 1 || command > 8) command = -1;
+        if (command < 1 || command > 8)
+            command = -1;
     } catch (std::invalid_argument) {
         command = -1;
     }
 
     switch (command) {
-        case ADD:
-            add();
-            return;
-        case DELETE:
-            delete_share();
-            return;
-        case IMPORT:
-            import();
-            return;
-        case PLOT:
-            plot();
-            return;
-        case SAVE:
-            save();
-            return;
-        case LOAD:
-            load();
-            return;
-        case QUIT:
-            std::cout << "Quitting program." << std::endl;
-            exit(0);
-        case SEARCH:
-            Share *share;
-            share = search();
-            if (!share) {
-                std::cout << "Share could not be found." << std::endl;
-            } else {
-                std::cout << "Share found." << std::endl;
-                share->days[0].printDay();
-            }
-            return;
-        case INVALID:
-            std::cout << "Wrong input. Try again." << std::endl;
-            return;
-        default:
-            exit(1);
+    case ADD:
+        add();
+        return;
+    case DELETE:
+        delete_share();
+        return;
+    case IMPORT:
+        import();
+        return;
+    case PLOT:
+        plot();
+        return;
+    case SAVE:
+        save();
+        return;
+    case LOAD:
+        load();
+        return;
+    case QUIT:
+        std::cout << "Quitting program." << std::endl;
+        exit(0);
+    case SEARCH:
+        Share* share;
+        share = search();
+        if (!share) {
+            std::cout << "Share could not be found." << std::endl;
+        } else {
+            std::cout << "Share found." << std::endl;
+            share->days[0].printDay();
+        }
+        return;
+    case INVALID:
+        std::cout << "Wrong input. Try again." << std::endl;
+        return;
+    default:
+        exit(1);
     }
 }
 //REVIEW the json save part daniel made

@@ -5,15 +5,14 @@
 #ifndef HASHTABLE_DAY_H
 #define HASHTABLE_DAY_H
 
+#include "time_utils.h"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "time_utils.h"
 
 using json = nlohmann::json;
 
 class Day {
 public:
-
     time_t date;
     uint32_t volume;
 
@@ -25,21 +24,31 @@ public:
 
     Day() = default;
 
-    Day(uint32_t date, float open, float high, float low, float close,
-        float adj_close, uint32_t volume)
-            : date(date), open(open), high(high), low(low), close(close), adj_close(adj_close), volume(volume) {
+    Day(uint32_t date, float open, float high, float low, float close, float adj_close, uint32_t volume)
+        : date(date)
+        , volume(volume)
+        , open(open)
+        , high(high)
+        , low(low)
+        , close(close)
+        , adj_close(adj_close)
+    {
     }
 
-    bool operator==(const Day &other) const {
+    bool
+    operator==(const Day& other) const
+    {
         return open == other.open
-               && high == other.high
-               && low == other.low
-               && close == other.close
-               && adj_close == other.adj_close
-               && volume == other.volume;
+            && high == other.high
+            && low == other.low
+            && close == other.close
+            && adj_close == other.adj_close
+            && volume == other.volume;
     }
 
-    void printDay() const {
+    void
+    printDay() const
+    {
         std::cout << "Day: " << ts_toDate(this->date) << std::endl;
         std::cout << "Lowest: " << this->low << std::endl;
         std::cout << "Highest: " << this->high << std::endl;
@@ -50,19 +59,21 @@ public:
     }
 };
 
-void to_json(json &j, const Day &day) {
+void to_json(json& j, const Day& day)
+{
     j = json{
-            {"open",      day.open},
-            {"date",      day.date},
-            {"high",      day.high},
-            {"low",       day.low},
-            {"close",     day.close},
-            {"adj_close", day.adj_close},
-            {"volume",    day.volume}
+        { "open", day.open },
+        { "date", day.date },
+        { "high", day.high },
+        { "low", day.low },
+        { "close", day.close },
+        { "adj_close", day.adj_close },
+        { "volume", day.volume }
     };
 }
 
-void from_json(const json &j, Day &d) {
+void from_json(const json& j, Day& d)
+{
     d.volume = j["volume"];
     d.adj_close = j["adj_close"];
     d.close = j["close"];

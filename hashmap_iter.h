@@ -15,9 +15,9 @@ class internal_iter_impl {
 
 public:
     internal_iter_impl(hash_t hash, C& v, size_t step)
-        : m_hash(hash)
+        : m_i(step)
+        , m_hash(hash)
         , m_data(v)
-        , m_i(step)
     {
     }
 
@@ -48,8 +48,8 @@ class hashiter {
 
 public:
     hashiter(hash_t hash, std::vector<Bucket>& data)
-        : m_data(data)
-        , m_hash(hash)
+        : m_hash(hash)
+        , m_data(data)
     {
     }
 

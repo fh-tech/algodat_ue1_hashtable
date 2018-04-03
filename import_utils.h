@@ -5,28 +5,28 @@
 #ifndef HASHTABLE_IMPORT_UTILS_H
 #define HASHTABLE_IMPORT_UTILS_H
 
-#include <iostream>
-#include <fstream>
-#include <deque>
-#include <algorithm>
 #include "Day.h"
 #include "Share.h"
 #include "main_utils.h"
+#include <algorithm>
+#include <deque>
+#include <fstream>
+#include <iostream>
 
-std::deque<std::string> parse_csv(std::ifstream &input_file);
-std::array<Day, 30> import_fromFile(std::ifstream &input_file);
+std::deque<std::string> parse_csv(std::ifstream& input_file);
+std::array<Day, 30> import_fromFile(std::ifstream& input_file);
 void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source);
 void updateImport(Share* share);
 void import();
 
-
 // newest entries are at front now!
-std::deque<std::string> parse_csv(std::ifstream &input_file) {
+std::deque<std::string> parse_csv(std::ifstream& input_file)
+{
     std::deque<std::string> lines;
-    while(!input_file.eof()) {
+    while (!input_file.eof()) {
         std::string line;
         getline(input_file, line);
-        if(!line.empty()) {
+        if (!line.empty()) {
             std::replace(line.begin(), line.end(), ',', ' ');
             lines.push_front(line);
         }
@@ -36,12 +36,13 @@ std::deque<std::string> parse_csv(std::ifstream &input_file) {
 }
 
 // file needs to have newest entrys last!
-std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
+std::array<Day, 30> import_fromFile(std::ifstream& input_file)
+{
     std::deque<std::string> lines = parse_csv(input_file);
     std::array<Day, 30> days{};
     // else only header line
-    if(lines.size() > 0) {
-        int line_count = 0;
+    if (lines.size() > 0) {
+        size_t line_count = 0;
         while (line_count < 30 && line_count < lines.size()) {
             std::string line = lines.at(line_count);
             std::stringstream line_stream(line);
@@ -71,22 +72,24 @@ std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
 }
 
 //update logic
-void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source) {
+void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source)
+{
     int i;
     int j;
-    for(i = 29; i > 0; i-- ) {
-        if(source[i].date > target[i].date) {
+    for (i = 29; i > 0; i--) {
+        if (source[i].date > target[i].date) {
             j = i;
-            while(source[j].date > target[j].date && j > 0) {
+            while (source[j].date > target[j].date && j > 0) {
                 j--;
             }
             break;
         }
     }
-    memcpy(&target[j], &source[j], ((i+1)-j) * sizeof(Day));     //i + 1 because to index 18 (19 elements)
+    memcpy(&target[j], &source[j], ((i + 1) - j) * sizeof(Day)); //i + 1 because to index 18 (19 elements)
 }
 
-void updateImport(Share* share) {
+void updateImport(Share* share)
+{
     std::string contin;
     if (share) {
         std::cout << "Share found. Continue importing? (y/n): ";
@@ -111,7 +114,7 @@ void updateImport(Share* share) {
                 std::cout << "Import was successful" << std::endl;
             } else {
                 std::cout << "operation aborted" << std::endl;
-                input_file.close();     //dont forget to close in either case
+                input_file.close(); //dont forget to close in either case
             }
         } else {
             std::cout << "Operation aborted." << std::endl;
@@ -124,8 +127,9 @@ void updateImport(Share* share) {
 }
 
 // returns new Share on success nullptr on failure
-void import() {
-    Share *share;
+void import()
+{
+    Share* share;
     std::string name;
     std::string id; //kürzel
     std::string contin;
@@ -134,23 +138,20 @@ void import() {
     std::cin >> contin;
     if (contin == "1") {
         share = search();
-        if(!share) {
+        if (!share) {
             std::cout << "No share with specified information found" << std::endl;
             return;
         }
-    } else if(contin == "2") {
+    } else if (contin == "2") {
         share = add();
     } else {
         std::cout << "No valid input. Aborting." << std::endl;
     }
-    if(!share) {
+    if (!share) {
         return;
     }
     //at this point its sure that the share * is valid now we can do updateImport
     updateImport(share);
 }
-
-
-
 
 #endif //HASHTABLE_IMPORT_UTILS_H
