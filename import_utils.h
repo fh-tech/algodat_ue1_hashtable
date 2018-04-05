@@ -74,18 +74,39 @@ std::array<Day, 30> import_fromFile(std::ifstream& input_file)
 //update logic
 void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source)
 {
-    int i;
-    int j;
-    for (i = 29; i > 0; i--) {
-        if (source[i].date > target[i].date) {
-            j = i;
-            while (source[j].date > target[j].date && j > 0) {
-                j--;
+    std::array<Day, 30> newDays{};
+    int i,j,k;
+    i = j = k = 0;
+
+    while(k < 30) {
+        // <= otherwise endless in some cases
+        // avoid duplicate days
+        if(target[i].date == source[j].date) {
+            int start = j;
+            while(target[i].date == source[j].date && (k+(j-start)) < 30) {
+                i++;
+                j++;
             }
-            break;
+            int count = (j-start);
+            memcpy(&newDays[k], &source[start], count * sizeof(Day));
+            k+=count;
+        } else if(target[i].date < source[j].date) {
+            int start = j;
+            //do it as long as its bigger and you want copy past the new array
+            while(target[i].date < source[j].date && (k+(j-start)) < 30) j++;
+            int count = (j-start);
+            memcpy(&newDays[k], &source[start], count * sizeof(Day));
+            //add to counter how many elements were just added
+            k += count;
+        } else if(target[i].date > source[j].date) {
+            int start = i;
+            while(target[i].date > source[j].date && (k+(i-start)) < 30) i++;
+            int count = (i-start);
+            memcpy(&newDays[k], &target[start], count * sizeof(Day));
+            k += count;
         }
     }
-    memcpy(&target[j], &source[j], ((i + 1) - j) * sizeof(Day)); //i + 1 because to index 18 (19 elements)
+    target = newDays;
 }
 
 void updateImport(Share* share)

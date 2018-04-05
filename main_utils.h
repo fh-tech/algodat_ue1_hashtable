@@ -143,7 +143,7 @@ void plot()
         auto [daymin, daymax] = std::minmax_element(std::begin(share->days), std::end(share->days),
             [](Day& d0, Day& d1) { return d0.close < d1.close; });
 
-        std::cout << "<--------------------->" << std::endl;
+        std::cout << "<----------------------------->" << std::endl;
         float delta = daymax->close - daymin->close;
         float delta_row = delta / plot.size();
 
@@ -155,7 +155,7 @@ void plot()
         for (auto& row : plot) {
             std::cout << std::string(row.cbegin(), row.cend()) << std::endl;
         }
-        std::cout << "<--------------------->" << std::endl;
+        std::cout << "<----------------------------->" << std::endl;
     }
 }
 
