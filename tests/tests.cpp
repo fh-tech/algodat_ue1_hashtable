@@ -6,7 +6,7 @@
 #include "../hashmap.h"
 #include "utils.h"
 #include "../main_utils.h"
-#include <nlohmann/json.hpp>
+#include <chrono>
 
 
 TEST(hashtable, test1) {
@@ -22,13 +22,10 @@ TEST(hashtable, test1) {
     std::string id = "MSFT";
     Share *s_id = hashtable.get_by_id(id);
 
-
-    std::cout << s_name << std::endl;
-    std::cout << s_id << std::endl;
-
+//    std::cout << s_name << std::endl;
+//    std::cout << s_id << std::endl;
 
     Share s = Share{"Microsoft", "MSFT", "1234"};
-
 
     ASSERT_EQ(s, *s_id);
     ASSERT_EQ(s, *s_id);
@@ -54,7 +51,7 @@ TEST(json, day_serialier) {
 
     Day d = random_day();
     json j = d;
-    std::cout << j << std::endl;
+//    std::cout << j << std::endl;
 
     Day d2 = j;
 
@@ -65,7 +62,7 @@ TEST(json, share_serialier) {
 
     Share s = random_share();
     json j = s;
-    std::cout << j << std::endl;
+//    std::cout << j << std::endl;
 
     Share s2 = j;
 
@@ -116,8 +113,44 @@ TEST(update_days_check, import_utils) {
         source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
     }
 
+    auto start = std::chrono::high_resolution_clock::now();
     updateDays(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update my Alg: " << timeNano << "ns" << std::endl;
 
+    std::array<uint32_t, 30> result_dates{30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12,
+                                          11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+
+
+    //check if target dates equal the expected result dates
+    for (int j = 0; j < 30; j++) {
+        ASSERT_EQ(target[j].date, result_dates[j]);
+    }
+}
+//together 30 elements
+TEST(update_days_check_sort, import_utils) {
+    std::array<Day, 30> target{};
+    std::array<Day, 30> source{};
+    std::array<uint32_t, 30> source_dates{30, 28, 27, 22, 21, 20, 11, 10, 9, 8, 7, 6, 5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0, 0};
+    std::array<uint32_t, 30> target_dates{29, 26, 25, 24, 23, 19, 18, 17, 16, 15, 14, 13, 12, 2, 1, 0, 0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0, 0};
+
+    int i = 0;
+    for (auto date: target_dates) {
+        target[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+    i = 0;
+    for (auto date: source_dates) {
+        source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+
+    auto start = std::chrono::high_resolution_clock::now();
+    updateDays2(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update with sort: " << timeNano << "ns" << std::endl;
 
     std::array<uint32_t, 30> result_dates{30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12,
                                           11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
@@ -147,7 +180,44 @@ TEST(update_days_check2, import_utils) {
         source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
     }
 
+    auto start = std::chrono::high_resolution_clock::now();
     updateDays(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update my Alg: " << timeNano << "ns" << std::endl;
+
+
+    std::array<uint32_t, 30> result_dates{30, 28, 27, 22, 21, 20, 11, 10, 9, 8, 7, 6, 5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0, 0};
+
+    //check if target dates equal the expected result dates
+    for (int j = 0; j < 30; j++) {
+        ASSERT_EQ(target[j].date, result_dates[j]);
+    }
+}
+//target empty (first import)
+TEST(update_days_check2_sort, import_utils) {
+    std::array<Day, 30> target{};
+    std::array<Day, 30> source{};
+    std::array<uint32_t, 30> source_dates{30, 28, 27, 22, 21, 20, 11, 10, 9, 8, 7, 6, 5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0, 0};
+    std::array<uint32_t, 30> target_dates{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0, 0};
+
+    int i = 0;
+    for (auto date: target_dates) {
+        target[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+    i = 0;
+    for (auto date: source_dates) {
+        source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+
+    auto start = std::chrono::high_resolution_clock::now();
+    updateDays2(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update with sort: " << timeNano << "ns" << std::endl;
 
 
     std::array<uint32_t, 30> result_dates{30, 28, 27, 22, 21, 20, 11, 10, 9, 8, 7, 6, 5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -178,7 +248,47 @@ TEST(update_days_check3, import_utils) {
         source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
     }
 
+    auto start = std::chrono::high_resolution_clock::now();
     updateDays(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update my Alg: " << timeNano << "ns" << std::endl;
+
+    // does not use 1 because it is the oldest that does not fit in anymore
+    std::array<uint32_t, 30> result_dates{31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,
+                                          12,
+                                          11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+
+
+    //check if target dates equal the expected result dates
+    for (int j = 0; j < 30; j++) {
+        ASSERT_EQ(target[j].date, result_dates[j]);
+    }
+}
+//more than 31 elements together that would fit
+TEST(update_days_check3_sort, import_utils) {
+    std::array<Day, 30> target{};
+    std::array<Day, 30> source{};
+    std::array<uint32_t, 30> source_dates{30, 28, 27, 22, 21, 20, 11, 10, 9, 8, 7, 6, 5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0, 0};
+    std::array<uint32_t, 30> target_dates{31, 29, 26, 25, 24, 23, 19, 18, 17, 16, 15, 14, 13, 12, 2, 1, 0, 0, 0, 0, 0,
+                                          0, 0,
+                                          0, 0, 0, 0, 0, 0};
+
+    int i = 0;
+    for (auto date: target_dates) {
+        target[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+    i = 0;
+    for (auto date: source_dates) {
+        source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+
+    auto start = std::chrono::high_resolution_clock::now();
+    updateDays2(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update with sort: " << timeNano << "ns" << std::endl;
 
     // does not use 1 because it is the oldest that does not fit in anymore
     std::array<uint32_t, 30> result_dates{31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,
@@ -225,7 +335,6 @@ TEST(update_days_check4, import_utils) {
         ASSERT_EQ(target[j].date, result_dates[j]);
     }
 }
-
 //target array completely empty
 TEST(update_days_check5, import_utils) {
     std::array<Day, 30> target{};
@@ -245,7 +354,47 @@ TEST(update_days_check5, import_utils) {
         source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
     }
 
+    auto start = std::chrono::high_resolution_clock::now();
     updateDays(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update my Alg: " << timeNano << "ns" << std::endl;
+
+    // does not use 1 because it is the oldest that does not fit in anymore
+    std::array<uint32_t, 30> result_dates{31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,
+                                          12, 11,
+                                          10, 9, 8, 7, 5, 4, 3, 2, 1};
+
+
+    //check if target dates equal the expected result dates
+    for (int j = 0; j < 30; j++) {
+        ASSERT_EQ(target[j].date, result_dates[j]);
+    }
+}
+//target array completely empty
+TEST(update_days_check5_sort, import_utils) {
+    std::array<Day, 30> target{};
+    std::array<Day, 30> source{};
+    std::array<uint32_t, 30> source_dates{31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,
+                                          12, 11,
+                                          10, 9, 8, 7, 5, 4, 3, 2, 1};
+    std::array<uint32_t, 30> target_dates{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0};
+
+    int i = 0;
+    for (auto date: target_dates) {
+        target[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+    i = 0;
+    for (auto date: source_dates) {
+        source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+
+    auto start = std::chrono::high_resolution_clock::now();
+    updateDays2(target, source);
+    auto end = std::chrono::high_resolution_clock::now();
+    long timeNano = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Time for update with sort: " << timeNano << "ns" << std::endl;
 
     // does not use 1 because it is the oldest that does not fit in anymore
     std::array<uint32_t, 30> result_dates{31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,

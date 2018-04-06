@@ -46,6 +46,13 @@ public:
             && volume == other.volume;
     }
 
+    bool operator < (const Day& other) const {
+        return this->date < other.date;
+    }
+    bool operator > (const Day& other) const {
+        return this->date > other.date;
+    }
+
     void
     printDay() const
     {

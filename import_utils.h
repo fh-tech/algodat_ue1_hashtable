@@ -90,23 +90,35 @@ void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source)
             int count = (j-start);
             memcpy(&newDays[k], &source[start], count * sizeof(Day));
             k+=count;
-        } else if(target[i].date < source[j].date) {
+        } else if(target[i] < source[j]) {
             int start = j;
             //do it as long as its bigger and you want copy past the new array
-            while(target[i].date < source[j].date && (k+(j-start)) < 30) j++;
+            while(target[i] < source[j] && (k+(j-start)) < 30) j++;
             int count = (j-start);
             memcpy(&newDays[k], &source[start], count * sizeof(Day));
             //add to counter how many elements were just added
             k += count;
-        } else if(target[i].date > source[j].date) {
+        } else if(target[i] > source[j]) {
             int start = i;
-            while(target[i].date > source[j].date && (k+(i-start)) < 30) i++;
+            while(target[i] > source[j] && (k+(i-start)) < 30) i++;
             int count = (i-start);
             memcpy(&newDays[k], &target[start], count * sizeof(Day));
             k += count;
         }
     }
     target = newDays;
+}
+
+//another possibility but can not handle duplicates (would be even slower) --> would be more practical with a vector instead of array
+void updateDays2(std::array<Day, 30>& target, std::array<Day,30>& source) {
+    std::array<Day, 60> tmp{};
+    memcpy(&tmp[0], &target[0], 30 * sizeof(Day));
+    memcpy(&tmp[30], &source[0], 30 * sizeof(Day));
+
+    // descending sort
+    std::sort(tmp.rbegin(), tmp.rend());
+    // copy newest 30 into target
+    memcpy(&target[0], &tmp[0], 30 * sizeof(Day));
 }
 
 void updateImport(Share* share)
