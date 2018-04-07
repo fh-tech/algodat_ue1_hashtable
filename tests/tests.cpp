@@ -335,6 +335,41 @@ TEST(update_days_check4, import_utils) {
         ASSERT_EQ(target[j].date, result_dates[j]);
     }
 }
+
+// both full but new dates are one day newer (complete new array should be used)   2 dates duplicate (30)
+TEST(update_days_check4_sort, import_utils) {
+    std::array<Day, 30> target{};
+    std::array<Day, 30> source{};
+    std::array<uint32_t, 30> source_dates{31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,
+                                          12, 11,
+                                          10, 9, 8, 7, 5, 4, 3, 2, 1};
+    std::array<uint32_t, 30> target_dates{30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12,
+                                          11,
+                                          10, 9, 8, 7, 5, 4, 3, 2, 1, 0};
+
+    int i = 0;
+    for (auto date: target_dates) {
+        target[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+    i = 0;
+    for (auto date: source_dates) {
+        source[i++] = Day{date, 0, 0, 0, 0, 0, 0};
+    }
+
+    updateDays2(target, source);
+
+    // does not use 1 because it is the oldest that does not fit in anymore
+    std::array<uint32_t, 30> result_dates{31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,
+                                          12, 11,
+                                          10, 9, 8, 7, 5, 4, 3, 2, 1};
+
+
+    //check if target dates equal the expected result dates
+    for (int j = 0; j < 30; j++) {
+        ASSERT_EQ(target[j].date, result_dates[j]);
+    }
+}
+
 //target array completely empty
 TEST(update_days_check5, import_utils) {
     std::array<Day, 30> target{};

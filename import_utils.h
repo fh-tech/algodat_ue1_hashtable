@@ -41,7 +41,7 @@ std::array<Day, 30> import_fromFile(std::ifstream& input_file)
     std::deque<std::string> lines = parse_csv(input_file);
     std::array<Day, 30> days{};
     // else only header line
-    if (lines.size() > 0) {
+    if (lines.empty()) {
         size_t line_count = 0;
         while (line_count < 30 && line_count < lines.size()) {
             std::string line = lines.at(line_count);
@@ -94,7 +94,9 @@ void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source)
             int start = j;
             //do it as long as its bigger and you want copy past the new array
             while(target[i] < source[j] && (k+(j-start)) < 30) j++;
+
             int count = (j-start);
+
             memcpy(&newDays[k], &source[start], count * sizeof(Day));
             //add to counter how many elements were just added
             k += count;
@@ -117,6 +119,7 @@ void updateDays2(std::array<Day, 30>& target, std::array<Day,30>& source) {
 
     // descending sort
     std::sort(tmp.rbegin(), tmp.rend());
+    std::unique(tmp.begin(), tmp.end(), [](Day& d1, Day& d2){ return d1.date == d2.date;});
     // copy newest 30 into target
     memcpy(&target[0], &tmp[0], 30 * sizeof(Day));
 }
@@ -162,7 +165,7 @@ void updateImport(Share* share)
 // returns new Share on success nullptr on failure
 void import()
 {
-    Share* share;
+    Share* share{};
     std::string name;
     std::string id; //kürzel
     std::string contin;

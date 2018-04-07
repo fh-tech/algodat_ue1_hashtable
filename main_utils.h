@@ -243,7 +243,7 @@ void parse_input(std::string& input)
         command = std::stoi(input);
         if (command < 1 || command > 8)
             command = -1;
-    } catch (std::invalid_argument) {
+    } catch (std::invalid_argument&) {
         command = -1;
     }
 
