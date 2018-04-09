@@ -9,8 +9,9 @@
 #include "hashmap.h"
 #include <iomanip>
 
-template<HashTable::KeyType keyType>
-inline std::string &HashTable::getKey(Share &share) const {
+template <HashTable::KeyType keyType>
+inline std::string& HashTable::getKey(Share& share) const
+{
     //constexpr because we know to compile time if we want id or name
     if constexpr (keyType == HashTable::ID) {
         return share.id;
@@ -19,8 +20,9 @@ inline std::string &HashTable::getKey(Share &share) const {
     }
 }
 
-template<HashTable::KeyType keyType>
-constexpr std::vector<Bucket> &HashTable::getTable() {
+template <HashTable::KeyType keyType>
+constexpr std::vector<Bucket>& HashTable::getTable()
+{
     //constexpr because we know to compile time if we want id or name
     if constexpr (keyType == ID) {
         return m_idTable;
@@ -29,10 +31,11 @@ constexpr std::vector<Bucket> &HashTable::getTable() {
     }
 }
 
-template<HashTable::KeyType keyType>
-Bucket *HashTable::insert_side(std::string &s) {
+template <HashTable::KeyType keyType>
+Bucket* HashTable::insert_side(std::string& s)
+{
     //iterate over the probing sequence
-    for (Bucket &bucket : iter<keyType>(s)) {
+    for (Bucket& bucket : iter<keyType>(s)) {
         //a bucket is valid for insertion if it is empty, invalid or if we want to overwrite the entry
         if (bucket.other == nullptr
             || bucket.other == &m_invalid
@@ -45,14 +48,16 @@ Bucket *HashTable::insert_side(std::string &s) {
     return nullptr;
 }
 
-void HashTable::print() {
-    for (auto &b : m_idTable) {
+void HashTable::print()
+{
+    for (auto& b : m_idTable) {
         std::cout << std::setw(14) << b.data << "  : " << (b.data ? b.data->name : "") << '\n';
     }
     std::cout << std::endl;
 }
 
-Share *HashTable::insert(Share &&share) {
+Share* HashTable::insert(Share&& share)
+{
     //take ownership of share and allocate it on heap
     auto sh_ptr = new Share(std::move(share));
     //try to insert sh_ptr into both tables
@@ -91,12 +96,13 @@ Share *HashTable::insert(Share &&share) {
     }
 }
 
-template<HashTable::KeyType keyType>
-Bucket *HashTable::get_for_key(std::string &key) {
+template <HashTable::KeyType keyType>
+Bucket* HashTable::get_for_key(std::string& key)
+{
     //remember the first invalid bucket
-    Bucket *toSwitch = nullptr;
+    Bucket* toSwitch = nullptr;
 
-    for (auto &bucket : iter<keyType>(key)) {
+    for (auto& bucket : iter<keyType>(key)) {
 
         if (bucket.other == nullptr) {
             //bucket is empty therefore probing sequence ends
@@ -104,7 +110,8 @@ Bucket *HashTable::get_for_key(std::string &key) {
         } else if (bucket.other == &m_invalid) {
 
             //if we have not found an invalid bucket remember the first
-            if(!toSwitch) toSwitch = &bucket;
+            if (!toSwitch)
+                toSwitch = &bucket;
 
         } else if (getKey<keyType>(*bucket.data) == key) {
             //we found our key, if we have an invalid bucket swap them and return
@@ -121,7 +128,8 @@ Bucket *HashTable::get_for_key(std::string &key) {
     return nullptr;
 }
 
-hash_t HashTable::make_hash(std::string &str) const {
+hash_t HashTable::make_hash(std::string& str) const
+{
     hash_t hash_value = 0, base = 127;
     for (auto c : str) {
         hash_value = (hash_value * base + c);
@@ -129,9 +137,10 @@ hash_t HashTable::make_hash(std::string &str) const {
     return hash_value;
 }
 
-template<HashTable::KeyType keyType>
-std::unique_ptr<Share> HashTable::remove(std::string &key) {
-    for (auto &bucket : iter<keyType>(key)) {
+template <HashTable::KeyType keyType>
+std::unique_ptr<Share> HashTable::remove(std::string& key)
+{
+    for (auto& bucket : iter<keyType>(key)) {
 
         //an empty bucket signals the end of the probing sequence
         if (bucket.other == nullptr)
@@ -152,10 +161,11 @@ std::unique_ptr<Share> HashTable::remove(std::string &key) {
     return nullptr;
 }
 
-bool HashTable::operator==(const HashTable &other) const {
+bool HashTable::operator==(const HashTable& other) const
+{
 
-    std::vector<Share *> thisbucketref{};
-    std::vector<Share *> otherbucketref{};
+    std::vector<Share*> thisbucketref{};
+    std::vector<Share*> otherbucketref{};
     //collect all valid share pointer in both tables
     for (auto b : other.m_idTable) {
         if (b.other != nullptr && b.other != &other.m_invalid) {
@@ -170,8 +180,8 @@ bool HashTable::operator==(const HashTable &other) const {
     }
     //if one pointer table is a permutation of the other they both have the same elements and therefore the hashtables are equal
     return std::is_permutation(thisbucketref.begin(), thisbucketref.end(),
-                               otherbucketref.begin(), otherbucketref.end(),
-                               [](auto s1, auto s2) { return *s1 == *s2; });
+        otherbucketref.begin(), otherbucketref.end(),
+        [](auto s1, auto s2) { return *s1 == *s2; });
 }
 
 #endif //DEFINITIVEHASH_HASHMAP_IMPL_H

@@ -5,7 +5,7 @@
 ![overview](img/overview.jpg)
 
 ## 1) Hashfunktion
-* because modulo is an expensive operation we chose to have a table, which is a power of 2(since it is a trivial computation "shift")
+* because modulo is an expensive operation we chose to have a table, which is a power of 2(since it is a trivial bitmask)
 * should be uniform
 * should be fast
 * sometimes specific length or value

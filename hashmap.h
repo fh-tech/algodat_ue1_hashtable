@@ -42,7 +42,6 @@ struct Bucket {
 
 class HashTable {
 public:
-
     /**
      * The two key types of a share object.
      * Multiple methods are templated to provide different function depending which KeyType is used.
@@ -111,7 +110,6 @@ private:
     std::unique_ptr<Share> remove(std::string& key);
 
 public:
-
     HashTable() = default;
     /**
      * Constructs a new Hashtable with a specified maximal capacity.
@@ -127,10 +125,10 @@ public:
     /**
      *  Makes sure every remaining heap-allocated Share is deleted when this hashtable runs out of scope.
      */
-    ~HashTable(){
-        for(auto& b: m_idTable){
-            if(b.data)
-            {
+    ~HashTable()
+    {
+        for (auto& b : m_idTable) {
+            if (b.data) {
                 delete b.data;
             }
         }
@@ -163,7 +161,7 @@ public:
      * @return a Pointer to the bucket containing the searched for Share
      */
     template <KeyType keyType>
-    Bucket* get_for_key(std::string& str);
+    Bucket* get_for_key(std::string& key);
 
     /**
      * Searches for a share with the specified name
@@ -202,7 +200,6 @@ public:
      */
     bool operator==(const HashTable& other) const;
 
-
     /**
      * Removes an element from the hashtable
      * The actual Bucket is not removed, because this would entail moving every bucket in the probing sequence over by one,
@@ -215,7 +212,6 @@ public:
         return remove<NAME>(str);
     }
 
-
     /**
      * Removes an element from the hashtable
      * The actual Bucket is not removed, because this would entail moving every bucket in the probing sequence over by one,
@@ -227,24 +223,22 @@ public:
     {
         return remove<ID>(str);
     }
-
 };
-
 
 #include "hashmap_impl.h"
 
-void from_json(const json& j, HashTable& ht){
-
+void from_json(const json& j, HashTable& ht)
+{
 }
 
-static void to_json(json& j, const HashTable& ht){
+static void to_json(json& j, const HashTable& ht)
+{
     j["capacity"] = ht.m_idTable.size();
     std::vector<Share> shs{};
-    for(auto& b: ht.m_idTable){
-        if(b.other != nullptr && b.other != &ht.m_invalid){
-            if(b.data)
+    for (auto& b : ht.m_idTable) {
+        if (b.other != nullptr && b.other != &ht.m_invalid) {
+            if (b.data)
                 shs.push_back(*b.data);
-
         }
     }
     j["elements"] = shs;
