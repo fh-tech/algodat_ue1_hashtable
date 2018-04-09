@@ -7,7 +7,7 @@
 
 #include <cstring>
 #include <iostream>
-#include <time.h>
+#include <ctime>
 
 
 /**
@@ -30,7 +30,7 @@ std::string ts_toDate(std::time_t ts)
  */
 time_t make_ts(std::string& date)
 {
-    tm tm{};
+    struct tm tm{};
 
     memset(&tm, 0, sizeof(struct tm)); //clean all fields
     if (strptime(date.c_str(), "%Y-%m-%d", &tm) != nullptr) {
