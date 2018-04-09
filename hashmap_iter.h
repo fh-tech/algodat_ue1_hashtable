@@ -7,6 +7,13 @@
 
 #include "hashmap.h"
 
+/**
+ * Internal representation of a quadratic probing iterator
+ * For a given hash value calculates the sequence e_i = (hash + i * i) % size
+ * and stops when i is equal to size
+ *
+ * Conforms the c++ stdlib iterator standard and can be used in a foreach loop
+ */
 template <typename T, typename C>
 class internal_iter_impl {
     size_t m_i{};
