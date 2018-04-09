@@ -46,6 +46,7 @@ public:
             && volume == other.volume;
     }
 
+//    overwritten for comparison of Days in import
     bool operator<(const Day& other) const
     {
         return this->date < other.date;

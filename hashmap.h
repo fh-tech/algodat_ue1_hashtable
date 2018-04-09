@@ -36,7 +36,7 @@ struct Bucket {
  *
  * On delete a bucket is not removed, but set invalid. An invalid bucket is ignored when searching and overwritten when inserting.
  * To combat performance degradation, when a lot of elements are inserted and then removed, during a search the first invalid
- * element is marked and once the searched for element is found the table overwrites the invalid with the found element.
+ * element is marked and once the searched for element is found the table switches the invalid with the found element.
  *
  */
 
@@ -84,7 +84,7 @@ private:
     constexpr std::vector<Bucket>& getTable();
 
     /**
-     * Returns the next valid bucket for a given key and keytype where a new Share can be inserted to
+     * Returns the next valid bucket for a given key and keytype where a new Share can be inserted
      * The returned bucket is either invalid or empty
      * @tparam keyType
      * @param s

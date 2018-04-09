@@ -27,6 +27,9 @@ void parse_input(std::string& input);
 
 #include "import_utils.h"
 
+/**
+ * commands used in the main loop
+ */
 enum Command : int {
     ADD = 1,
     DELETE = 2,
@@ -39,6 +42,14 @@ enum Command : int {
     INVALID = -1
 };
 
+/**
+ * checks if the strings are not empty and can show output in verbose
+ * @param id string id reference for the new share
+ * @param wkn string wkn reference for the new share
+ * @param name string name reference for the new share
+ * @param verbose boolean show message
+ * @return
+ */
 bool validInput(const std::string& id, const std::string& wkn, const std::string& name, bool verbose)
 {
     bool valid = !name.empty() && !id.empty() && !wkn.empty();
@@ -47,6 +58,10 @@ bool validInput(const std::string& id, const std::string& wkn, const std::string
     return valid;
 }
 
+/**
+ * dialogue for adding a share to the hashtable
+ * @return a pointer to the share just added or nullpointer on fail
+ */
 Share* add()
 {
     Share share{};
@@ -87,6 +102,9 @@ Share* add()
     return share_p;
 }
 
+/**
+ * dialogue for deleting a share from hashtable
+ */
 void delete_share()
 {
     std::string contin;
@@ -106,6 +124,10 @@ void delete_share()
     }
 }
 
+/**
+ * dialogue for searching a share in hashtable
+ * @return a pointer to the found share or nullptr
+ */
 Share* search()
 {
     std::string contin;
@@ -130,6 +152,9 @@ Share* search()
     return share;
 }
 
+/**
+ * prints a graph of a share that will be searched first
+ */
 void plot()
 {
     Share* share;
@@ -159,6 +184,9 @@ void plot()
     }
 }
 
+/**
+ * another implementation of graph (not used)
+ */
 void plot2()
 {
     Share* share;
@@ -196,6 +224,9 @@ void plot2()
     }
 }
 
+/**
+ * dialogue for saving the whole hashtable into a file - user has to specify an absolute path
+ */
 void save()
 {
     std::cout << "Please enter an absolute file name: \n>";
@@ -213,6 +244,9 @@ void save()
     }
 }
 
+/**
+ * dialogue for loading the hashtable from a first saved json
+ */
 void load()
 {
     std::cout << "Please enter a absolute file name: \n>";
@@ -236,6 +270,10 @@ void load()
     }
 }
 
+/**
+ * decides which action to execute depending on user input
+ * @param input string of user input
+ */
 void parse_input(std::string& input)
 {
     int command;
@@ -286,8 +324,6 @@ void parse_input(std::string& input)
         exit(1);
     }
 }
-//REVIEW the json save part daniel made
-//TODO: write tests for everything too (think about some edge cases)
-//FIXME: adding share, then saving, then loading, then quit --> double free or corruption (out)
+
 
 #endif //HASHTABLE_MAIN_UTILS_H

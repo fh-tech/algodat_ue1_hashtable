@@ -23,7 +23,7 @@ inline std::string& HashTable::getKey(Share& share) const
 template <HashTable::KeyType keyType>
 constexpr std::vector<Bucket>& HashTable::getTable()
 {
-    //constexpr because we know to compile time if we want id or name
+    //constexpr because we know at compile time if we want id or name
     if constexpr (keyType == ID) {
         return m_idTable;
     } else {

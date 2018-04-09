@@ -13,8 +13,10 @@
 struct Share {
 
     std::string name{};
-    std::string wkn{}; // wertpapierkennnummer
-    std::string id{}; // kürzel zum beispiel MSFT für microsoft aktie
+    // wertpapierkennnummer
+    std::string wkn{};
+    // kürzel zum beispiel MSFT für microsoft aktie
+    std::string id{};
     std::array<Day, 30> days{};
 
     Share() = default;
@@ -23,6 +25,7 @@ struct Share {
     Share& operator=(const Share& other) = default;
     Share(Share&& other) = default;
 
+//    && for moving
     Share(std::string&& name, std::string&& id, std::string&& wkn)
         : name(std::move(name))
         , wkn(std::move(wkn))

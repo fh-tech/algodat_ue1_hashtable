@@ -9,6 +9,12 @@
 #include <iostream>
 #include <time.h>
 
+
+/**
+ *
+ * @param ts std::time_t (timestamp)
+ * @return string representing the timestamp
+ */
 std::string ts_toDate(std::time_t ts)
 {
     tm* tm = gmtime(&ts);
@@ -17,6 +23,11 @@ std::string ts_toDate(std::time_t ts)
     return std::string(date);
 }
 
+/**
+ *
+ * @param date a string in the format %Y-%m-%d
+ * @return std::time_t timestamp
+ */
 time_t make_ts(std::string& date)
 {
     tm tm{};

@@ -13,15 +13,23 @@
 #include <fstream>
 #include <iostream>
 
-std::deque<std::string> parse_csv(std::ifstream& input_file);
-std::array<Day, 30> import_fromFile(std::ifstream& input_file);
-void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source);
-void updateImport(Share* share);
+std::deque<std::string> parse_csv(std::ifstream &input_file);
+
+std::array<Day, 30> import_fromFile(std::ifstream &input_file);
+
+void updateDays(std::array<Day, 30> &target, std::array<Day, 30> &source);
+
+void updateImport(Share *share);
+
 void import();
 
-// newest entries are at front now!
-std::deque<std::string> parse_csv(std::ifstream& input_file)
-{
+
+/**
+ * reverses order of lines -- newest first, removes separators, removes heading line, saves it in deque
+ * @param input_file
+ * @return std::deque<std::string> ready to use strings representing the lines without separators/header line and newest entries first
+ */
+std::deque<std::string> parse_csv(std::ifstream &input_file) {
     std::deque<std::string> lines;
     while (!input_file.eof()) {
         std::string line;
@@ -35,30 +43,36 @@ std::deque<std::string> parse_csv(std::ifstream& input_file)
     return lines;
 }
 
-// file needs to have newest entrys last!
-std::array<Day, 30> import_fromFile(std::ifstream& input_file)
-{
+/**
+ *
+ * @param input_file reference on input file to import
+ * @return std::array<Day,30> with the newest 30 entries of the specified file
+ */
+std::array<Day, 30> import_fromFile(std::ifstream &input_file) {
     std::deque<std::string> lines = parse_csv(input_file);
     std::array<Day, 30> days{};
+
     // else only header line
     if (lines.empty()) {
         size_t line_count = 0;
+        //keep going until we have 30 or no lines left
         while (line_count < 30 && line_count < lines.size()) {
             std::string line = lines.at(line_count);
             std::stringstream line_stream(line);
-            //REVIEW: maybe read first line and check if identical ?
             // line.empty important otherwise unnecessary iteration if newline at end
             if (!line.empty() && line_count < 30) {
-                //REVIEW: i thought when i make a new variable in loop it is not related to last in any way and is initialized by default with default constructor...
-                std::string date{}; // always initialize with default values so on fail when filling no values again
+
+                // always initialize with default values
+                std::string date{};
                 float open{};
                 float high{};
                 float low{};
                 float close{};
                 float adj_close{};
                 uint32_t volume{};
-                //fill all vars from stream;
+                //fill all vars from stream (separators are already removed)
                 line_stream >> date >> open >> high >> low >> close >> adj_close >> volume;
+                // make timestamp out of date
                 time_t unix_date = make_ts(date);
                 days[line_count] = Day(unix_date, open, high, low, close, adj_close, volume);
             }
@@ -71,16 +85,18 @@ std::array<Day, 30> import_fromFile(std::ifstream& input_file)
     return days;
 }
 
-//update logic
-void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source)
-{
+/**
+ * takes the two Day Arrays and makes one with the most recent entries - own implementation
+ * @param target std::array<Day,30> that should be updated
+ * @param source std::array<Day,30> that should be used for the update
+ */
+void updateDays(std::array<Day, 30> &target, std::array<Day, 30> &source) {
     std::array<Day, 30> newDays{};
     int i, j, k;
     i = j = k = 0;
 
     while (k < 30) {
-        // <= otherwise endless in some cases
-        // avoid duplicate days
+        // avoid duplicate days!
         if (target[i].date == source[j].date) {
             int start = j;
             while (target[i].date == source[j].date && (k + (j - start)) < 30) {
@@ -114,25 +130,33 @@ void updateDays(std::array<Day, 30>& target, std::array<Day, 30>& source)
             k += count;
         }
     }
+    //assign the new array to the reference
     target = newDays;
 }
 
-//another possibility but can not handle duplicates (would be even slower) --> would be more practical with a vector instead of array
-void updateDays2(std::array<Day, 30>& target, std::array<Day, 30>& source)
-{
+/**
+ * another possibility for the update but way slower!
+ * @param target std::array<Day,30> that should be updated
+ * @param source std::array<Day,30> that should be used for the update
+ */
+void updateDays2(std::array<Day, 30> &target, std::array<Day, 30> &source) {
     std::array<Day, 60> tmp{};
     memcpy(&tmp[0], &target[0], 30 * sizeof(Day));
     memcpy(&tmp[30], &source[0], 30 * sizeof(Day));
 
     // descending sort
     std::sort(tmp.rbegin(), tmp.rend());
-    std::unique(tmp.begin(), tmp.end(), [](Day& d1, Day& d2) { return d1.date == d2.date; });
+    std::unique(tmp.begin(), tmp.end(), [](Day &d1, Day &d2) { return d1.date == d2.date; });
     // copy newest 30 into target
     memcpy(&target[0], &tmp[0], 30 * sizeof(Day));
 }
 
-void updateImport(Share* share)
-{
+
+/**
+ * takes a share and asks user for the absolute path of the file to import - executes the actual import
+ * @param share pointer on a valid share
+ */
+void updateImport(Share *share) {
     std::string contin;
     if (share) {
         std::cout << "Share found. Continue importing? (y/n): ";
@@ -150,7 +174,7 @@ void updateImport(Share* share)
             if (contin == "y") {
                 std::cout << "importing please wait...";
                 std::array<Day, 30> days_new = import_fromFile(input_file);
-                std::array<Day, 30>& days_actual = share->days;
+                std::array<Day, 30> &days_actual = share->days;
 
                 updateDays(days_actual, days_new);
 
@@ -169,10 +193,11 @@ void updateImport(Share* share)
     }
 }
 
-// returns new Share on success nullptr on failure
-void import()
-{
-    Share* share{};
+/**
+ * Dialogue for the import, searches for share and executes import either with new share or for existing share
+ */
+void import() {
+    Share *share{};
     std::string name;
     std::string id; //kürzel
     std::string contin;
